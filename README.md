@@ -10,3 +10,11 @@ go mod tidy
 # Remove a package
 go get package@none
 ```
+
+## Libraries
+
+* https://github.com/vbauerster/mpb
+
+## References
+
+* https://maelvls.dev/go111module-everywhere/
