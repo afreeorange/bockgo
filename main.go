@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bytes"
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,81 +9,58 @@ import (
 	"time"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing/object"
+	cp "github.com/otiai10/copy"
 	uuid "github.com/satori/go.uuid"
 )
 
-type Article struct {
-	ID           string     `json:"id"`
-	Folder       string     `json:"folder"`
-	Path         []string   `json:"path"`
-	Size         int64      `json:"sizeInBytes"`
-	Title        string     `json:"title"`
-	Type         string     `json:"type"`
-	FileModified string     `json:"modified"`
-	Source       string     `json:"source"`
-	Html         string     `json:"html"`
-	Revisions    []Revision `json:"revisions"`
-}
-
-type Author struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
-type Revision struct {
-	Id      string `json:"id"`
-	ShortId string `json:"shortId"`
-	Date    string `json:"date"`
-	Subject string `json:"subject"`
-	Body    string `json:"body"`
-	Author  Author `json:"author"`
+func makeUri(articlePath string, articleRoot string) string {
+	uri := strings.ReplaceAll(strings.Replace(articlePath, articleRoot, "", -1), " ", "_")
+	return strings.TrimSuffix(uri, filepath.Ext(uri))
 }
 
 func processArticle(
-	path string,
+	articlePath string,
 	articleRoot string,
-	buffer *bytes.Buffer,
+	outputFolder string,
 	f os.FileInfo,
 	repository *git.Repository,
 	messages chan Article,
 ) {
-	dir := strings.Replace(filepath.Dir(path), articleRoot, "", -1)
+	dir := strings.Replace(filepath.Dir(articlePath), articleRoot, "", -1)
 	fileName := f.Name()
 	title := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 	filePath := strings.Split(dir, "/")[1:]
 
-	fmt.Println("Doing", fileName)
+	fmt.Println("Processing", makeUri(articlePath, articleRoot))
 
-	commits, _ := repository.Log(&git.LogOptions{FileName: &fileName})
-	commits.ForEach(func(c *object.Commit) error {
-		f, err := c.Files()
+	// commits, _ := repository.Log(&git.LogOptions{FileName: &fileName})
+	// commits.ForEach(func(c *object.Commit) error {
+	// 	f, err := c.Files()
 
-		if err != nil {
-			fmt.Println("Could not get files for commit: ", c.Hash)
-		} else {
-			f.ForEach(func(f *object.File) error {
-				if f.Name == fileName {
-					fileContents, _ := f.Contents()
-					render([]byte(fileContents), buffer)
+	// 	if err != nil {
+	// 		fmt.Println("Could not get files for commit: ", c.Hash)
+	// 	} else {
+	// 		f.ForEach(func(f *object.File) error {
+	// 			if f.Name == fileName {
+	// 				fileContents, _ := f.Contents()
+	// 				render([]byte(fileContents), buffer)
 
-					fmt.Println("---", c.Hash.String())
-					os.MkdirAll("/Users/nikhilanand/Desktop/temp/"+title+"/"+c.Hash.String()[0:8], os.ModePerm)
-					os.WriteFile("/Users/nikhilanand/Desktop/temp/"+title+"/"+c.Hash.String()[0:8]+"/index.html", buffer.Bytes(), os.ModePerm)
+	// 				fmt.Println("---", c.Hash.String())
+	// 				os.MkdirAll(outputFolder+"/"+title+"/"+c.Hash.String()[0:8], os.ModePerm)
+	// 				os.WriteFile(outputFolder+"/"+title+"/"+c.Hash.String()[0:8]+"/index.html", buffer.Bytes(), os.ModePerm)
 
-					buffer.Reset()
-				}
-				return nil
-			})
-		}
+	// 				buffer.Reset()
+	// 			}
+	// 			return nil
+	// 		})
+	// 	}
 
-		return nil
-	})
+	// 	return nil
+	// })
 
-	contents, _ := os.ReadFile(path)
-	render(contents, buffer)
+	contents, _ := os.ReadFile(articlePath)
 	item := Article{
-		ID:           uuid.NewV5(uuid.NamespaceURL, path).String(),
+		ID:           uuid.NewV5(uuid.NamespaceURL, articlePath).String(),
 		Path:         filePath,
 		Title:        title,
 		Folder:       dir,
@@ -91,71 +68,47 @@ func processArticle(
 		Type:         "article",
 		FileModified: f.ModTime().UTC().Format(time.RFC3339),
 		Source:       string(contents),
-		Html:         buffer.String(),
+		Html:         "",
 	}
+	html := render(contents, item)
 
-	os.MkdirAll("/Users/nikhilanand/Desktop/temp/"+title, os.ModePerm)
-	os.WriteFile("/Users/nikhilanand/Desktop/temp/"+title+"/index.html", buffer.Bytes(), os.ModePerm)
+	os.MkdirAll(outputFolder+"/"+title, os.ModePerm)
+	os.WriteFile(outputFolder+"/"+title+"/index.html", []byte(html), os.ModePerm)
 
 	jsonData, _ := json_marshal(item)
-	os.WriteFile("/Users/nikhilanand/Desktop/temp/"+title+"/index.json", jsonData, os.ModePerm)
+	os.WriteFile(outputFolder+"/"+title+"/index.json", jsonData, os.ModePerm)
 
-	buffer.Reset()
 	messages <- item
 }
 
-func glob(articleRoot string, extension string, r *git.Repository) ([]Article, error) {
-	files := []Article{}
-	var buffer bytes.Buffer
-
-	messages := make(chan Article)
-
-	err := filepath.Walk(articleRoot, func(path string, f os.FileInfo, err error) error {
-		if filepath.Ext(path) == extension {
-			go processArticle(path, articleRoot, &buffer, f, r, messages)
-
-			item := <-messages
-			files = append(files, item)
-		}
-
-		return nil
-	})
-
-	return files, err
-}
-
-// func getRevisions(r *git.Repository, fileName string) {
-// 	commits, _ := r.Log(&git.LogOptions{FileName: &fileName})
-
-// 	commits.ForEach(func(c *object.Commit) error {
-// 		f, err := c.Files()
-
-// 		if err != nil {
-// 			fmt.Println("Could not get files for commit: ", c.Hash)
-// 		} else {
-// 			f.ForEach(func(f *object.File) error {
-// 				if f.Name == fileName {
-// 					fmt.Println(c.Hash)
-// 					fmt.Println(c.Committer.When)
-// 					fmt.Println(f.Contents())
-// 					fmt.Println("---")
-// 				}
-// 				return nil
-// 			})
-// 		}
-
-// 		return nil
-// 	})
-// }
-
 func main() {
-	articleRoot := "/Users/nikhilanand/personal/wiki.nikhil.io.articles"
-	r, _ := git.PlainOpen(articleRoot)
+	articleRoot := flag.String("a", "", "Article root")
+	outputFolder := flag.String("o", "", "Output folder")
+	flag.Parse()
 
-	list, err := glob(articleRoot, ".md", r)
+	if *articleRoot == "" {
+		fmt.Println("You must give me an article folder")
+		os.Exit(1)
+	}
+
+	if *outputFolder == "" {
+		fmt.Println("You must give me an output folder")
+		os.Exit(2)
+	}
+
+	// Open git repo
+	r, _ := git.PlainOpen(*articleRoot)
+
+	// Process all articles
+	_, err := process(*articleRoot, *outputFolder, ".md", r)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("I found %s articles in %s\n", fmt.Sprint(len(list)), articleRoot)
+	// Copy static assets
+	fmt.Println("Copying assets...")
+	copyErr := cp.Copy(*articleRoot+"/__assets", *outputFolder+"/assets")
+	if copyErr != nil {
+		fmt.Println("Could not copy assets: ", copyErr)
+	}
 }
