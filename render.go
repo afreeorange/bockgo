@@ -10,7 +10,10 @@ import (
 
 //go:embed *.tmpl
 var content embed.FS
-var t, _ = template.ParseFS(content, "template.tmpl")
+var t, _ = template.ParseFS(content, []string{
+	"base.tmpl",
+	"entity.tmpl",
+}...)
 
 func render(source []byte, context Article) string {
 	var conversionBuffer bytes.Buffer
@@ -19,7 +22,17 @@ func render(source []byte, context Article) string {
 	}
 
 	var outputBuffer bytes.Buffer
-	t.Execute(&outputBuffer, template.HTML(conversionBuffer.String()))
+	t.ExecuteTemplate(
+		&outputBuffer,
+		"base",
+		struct {
+			Context Article
+			HTML    template.HTML
+		}{
+			Context: context,
+			HTML:    template.HTML(conversionBuffer.String()),
+		},
+	)
 	o := outputBuffer.String()
 
 	conversionBuffer.Reset()
