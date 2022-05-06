@@ -3,17 +3,18 @@ package main
 import (
 	"bytes"
 	"embed"
-	"html/template"
+	"encoding/json"
+	"strings"
 
+	"github.com/flosch/pongo2/v5"
 	"github.com/yuin/goldmark"
 )
 
-//go:embed *.tmpl
+//go:embed templates
 var content embed.FS
-var t, _ = template.ParseFS(content, []string{
-	"base.tmpl",
-	"entity.tmpl",
-}...)
+
+var pongoLoader = pongo2.NewFSLoader(content)
+var templateSet = pongo2.NewSet("templates", pongoLoader)
 
 func render(source []byte, context Article) string {
 	var conversionBuffer bytes.Buffer
@@ -21,22 +22,25 @@ func render(source []byte, context Article) string {
 		panic(err)
 	}
 
-	var outputBuffer bytes.Buffer
-	t.ExecuteTemplate(
-		&outputBuffer,
-		"base",
-		struct {
-			Context Article
-			HTML    template.HTML
-		}{
-			Context: context,
-			HTML:    template.HTML(conversionBuffer.String()),
-		},
-	)
-	o := outputBuffer.String()
+	var myMap map[string]interface{}
+	data, _ := json.Marshal(context)
+	json.Unmarshal(data, &myMap)
+
+	t, _ := templateSet.FromCache("templates/entity.html")
+	o, _ := t.Execute(pongo2.Context{
+		"id":          context.ID,
+		"folder":      context.Folder,
+		"path":        strings.Join(context.Path, "|"),
+		"sizeInBytes": context.Size,
+		"title":       context.Title,
+		"type":        context.Type,
+		"modified":    context.FileModified,
+		"source":      context.Source,
+		"html":        conversionBuffer.String(),
+		"revisions":   context.Revisions,
+	})
 
 	conversionBuffer.Reset()
-	outputBuffer.Reset()
 
 	return o
 }
