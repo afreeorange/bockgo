@@ -31,7 +31,7 @@ func main() {
 	}
 
 	if articleRoot == "" {
-		fmt.Println("You must give me an article folder")
+		fmt.Println("You must give me an article root")
 		os.Exit(1)
 	}
 

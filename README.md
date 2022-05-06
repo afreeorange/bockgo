@@ -55,3 +55,9 @@ commits.ForEach(func(c *object.Commit) error {
 * [Versioning](https://stackoverflow.com/questions/11354518/application-auto-build-versioning)
 * [Strings](https://dhdersch.github.io/golang/2016/01/23/golang-when-to-use-string-pointers.html)
 * [getopts](https://pkg.go.dev/github.com/pborman/getopt)
+* [Concurrency and Parallelism "Crash Course"](https://levelup.gitconnected.com/a-crash-course-on-concurrency-parallelism-in-go-8ea935c9b0f8)
+* [Templates and Embed](https://philipptanlak.com/mastering-html-templates-in-go-the-fundamentals/#parsing-templates)
+
+### Books
+
+* [Learning Go](https://miek.nl/go/learninggo.html)

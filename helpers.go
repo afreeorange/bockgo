@@ -13,17 +13,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func makeUri(articlePath string, articleRoot string) string {
-	uri := strings.ReplaceAll(strings.Replace(articlePath, articleRoot, "", -1), " ", "_")
-	return strings.TrimSuffix(uri, filepath.Ext(uri))
-}
-
 func copyAssets(articleRoot string, outputFolder string) {
 	fmt.Print("Copying assets... ")
 
 	err := cp.Copy(articleRoot+"/__assets", outputFolder+"/assets")
 	if err != nil {
-		fmt.Println("Could not copy assets: ", err)
+		fmt.Print("Oops, could not copy assets: ", err)
 	}
 
 	fmt.Println("done.")
@@ -42,6 +37,19 @@ func jsonMarshal(t interface{}) ([]byte, error) {
 	return buffer.Bytes(), err
 }
 
+func makeUri(articlePath string, articleRoot string) string {
+	uri := strings.ReplaceAll(strings.Replace(articlePath, articleRoot, "", -1), " ", "_")
+	return strings.TrimSuffix(uri, filepath.Ext(uri))
+}
+
+func makeID(articlePath string) string {
+	return uuid.NewV5(uuid.NamespaceURL, articlePath).String()
+}
+
+func removeExtensionFrom(articlePath string) string {
+	return strings.TrimSuffix(articlePath, filepath.Ext(articlePath))
+}
+
 func processArticle(
 	articlePath string,
 	articleRoot string,
@@ -50,15 +58,15 @@ func processArticle(
 ) Article {
 	dir := strings.Replace(filepath.Dir(articlePath), articleRoot, "", -1)
 	fileName := f.Name()
-	title := strings.TrimSuffix(fileName, filepath.Ext(fileName))
+	title := removeExtensionFrom(fileName)
 	filePath := strings.Split(dir, "/")[1:]
 
 	outPath := makeUri(articlePath, articleRoot)
-	fmt.Println("Writing", outPath)
+	// fmt.Println("Writing", outPath)
 
 	contents, _ := os.ReadFile(articlePath)
 	item := Article{
-		ID:           uuid.NewV5(uuid.NamespaceURL, articlePath).String(),
+		ID:           makeID(articlePath),
 		Path:         filePath,
 		Title:        title,
 		Folder:       dir,
