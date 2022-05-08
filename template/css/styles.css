@@ -159,7 +159,7 @@ header nav ul li a:hover {
 header nav ul li span {
   display: none;
 }
-header nav ul li a[href="/search"] {
+header nav ul li a[href="/archive"] {
   -webkit-mask-image: url(/img/search.svg);
   mask-image: url(/img/search.svg);
 }

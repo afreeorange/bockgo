@@ -1,15 +1,13 @@
 package main
 
 type Article struct {
-	ID           string     `json:"id"`
-	Folder       string     `json:"folder"`
-	Path         []string   `json:"path"`
-	Size         int64      `json:"sizeInBytes"`
-	Title        string     `json:"title"`
-	FileModified string     `json:"modified"`
-	Source       string     `json:"source"`
-	Html         string     `json:"html"`
-	Revisions    []Revision `json:"revisions"`
+	ID           string `json:"id"`
+	URI          string `json:"uri"`
+	Size         int64  `json:"sizeInBytes"`
+	Title        string `json:"title"`
+	FileModified string `json:"modified"`
+	Source       string `json:"source"`
+	Html         string `json:"html"`
 }
 
 type Author struct {

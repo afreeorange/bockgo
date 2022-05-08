@@ -12,6 +12,14 @@
       👉 A few things won&#8217;t work if you have JavaScript disabled.
     </noscript>
     <div class="container">
+      <header>
+        <nav>
+          <ul>
+            <li><a href="/archive"{% if type == "archive" %}class="active"{% endif %}><span>Archive</span></a></li>
+            <li><a href="/"{% if type == "home" %}class="active"{% endif %}><span>Home</span></a></li>
+          </ul>
+        </nav>
+      </header>
       <main>
         <h1>{{ title }}</h1>
         {% block main %}{% endblock main %}

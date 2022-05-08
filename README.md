@@ -14,6 +14,12 @@ go get package@none
 go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
 ```
 
+### TODO
+
+* [ ] Table of Contents
+
+---
+
 ```go
 r, _ := git.PlainOpen(*articleRoot)
 

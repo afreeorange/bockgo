@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	// TODO: Implement this yourself
 	cp "github.com/otiai10/copy"
 )
 
@@ -23,7 +24,6 @@ func copyTemplateAssets(outputFolder string) {
 		os.MkdirAll(outputFolder+"/"+a, os.ModePerm)
 
 		for _, de := range d {
-			fmt.Println(de.Name())
 			f, _ := templatesContent.ReadFile("template/" + a + "/" + de.Name())
 			os.WriteFile(outputFolder+"/"+a+"/"+de.Name(), f, os.ModePerm)
 		}

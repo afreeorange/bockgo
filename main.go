@@ -31,12 +31,12 @@ func main() {
 	}
 
 	if articleRoot == "" {
-		fmt.Println("You must give me an article root")
+		fmt.Println("You must give me an article root.")
 		os.Exit(1)
 	}
 
 	if outputFolder == "" {
-		fmt.Println("You must give me an output folder")
+		fmt.Println("You must give me an output folder.")
 		os.Exit(2)
 	}
 
@@ -48,11 +48,21 @@ func main() {
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
 
-	_, err := process(articleRoot, outputFolder)
+	articles, err := process(articleRoot, outputFolder)
 	if err != nil {
-		fmt.Println("Error occurred processing repository:", err)
+		fmt.Println("Could not process article root: ", err)
 	}
 
+	// https://stackoverflow.com/questions/28999735/what-is-the-shortest-way-to-simply-sort-an-array-of-structs-by-arbitrary-field
+	// sortedArticles, _ := sort.Slice(articles, func(i, j int) bool {
+	// 	return articles[i].FileModified > articles[j].FileModified
+	// })
+	// for _, a := range articles {
+	// 	fmt.Println(a.Title, a.FileModified)
+	// }
+
+	processArchive(articles, outputFolder)
+	processHome(articleRoot, outputFolder)
 	copyAssets(articleRoot, outputFolder)
 	copyTemplateAssets(outputFolder)
 }
