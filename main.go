@@ -48,10 +48,11 @@ func main() {
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
 
-	_, err := process(articleRoot, outputFolder, ".md")
+	_, err := process(articleRoot, outputFolder)
 	if err != nil {
 		fmt.Println("Error occurred processing repository:", err)
 	}
 
 	copyAssets(articleRoot, outputFolder)
+	copyTemplateAssets(outputFolder)
 }

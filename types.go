@@ -6,7 +6,6 @@ type Article struct {
 	Path         []string   `json:"path"`
 	Size         int64      `json:"sizeInBytes"`
 	Title        string     `json:"title"`
-	Type         string     `json:"type"`
 	FileModified string     `json:"modified"`
 	Source       string     `json:"source"`
 	Html         string     `json:"html"`

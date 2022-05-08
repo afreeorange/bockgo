@@ -9,20 +9,8 @@ import (
 	"strings"
 	"time"
 
-	cp "github.com/otiai10/copy"
 	uuid "github.com/satori/go.uuid"
 )
-
-func copyAssets(articleRoot string, outputFolder string) {
-	fmt.Print("Copying assets... ")
-
-	err := cp.Copy(articleRoot+"/__assets", outputFolder+"/assets")
-	if err != nil {
-		fmt.Print("Oops, could not copy assets: ", err)
-	}
-
-	fmt.Println("done.")
-}
 
 // The JSON marshaller in Golang's STDLIB cannot be configured to disable HTML
 // escaping. That's what this function does.
@@ -71,12 +59,11 @@ func processArticle(
 		Title:        title,
 		Folder:       dir,
 		Size:         f.Size(),
-		Type:         "article",
 		FileModified: f.ModTime().UTC().Format(time.RFC3339),
 		Source:       string(contents),
 		Html:         "",
 	}
-	html := render(contents, item)
+	html := renderArticle(contents, item)
 	item.Html = html
 
 	os.MkdirAll(outputFolder+outPath, os.ModePerm)
@@ -91,14 +78,26 @@ func processArticle(
 func process(
 	articleRoot string,
 	outputFolder string,
-	extension string,
 ) ([]Article, error) {
 	files := []Article{}
 
 	err := filepath.Walk(articleRoot, func(path string, f os.FileInfo, err error) error {
-		if filepath.Ext(path) == extension {
-			item := processArticle(path, articleRoot, outputFolder, f)
-			files = append(files, item)
+		if !IGNORED_FOLDERS_REGEX.MatchString(path) {
+
+			if !IGNORED_FILES_REGEX.MatchString(path) {
+				if filepath.Ext(path) == ".md" {
+					item := processArticle(path, articleRoot, outputFolder, f)
+					files = append(files, item)
+				}
+			}
+
+			if f.IsDir() {
+				if path == articleRoot {
+					fmt.Println("Will render home")
+				} else {
+					fmt.Println("Found", path)
+				}
+			}
 		}
 
 		return nil

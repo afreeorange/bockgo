@@ -57,7 +57,9 @@ commits.ForEach(func(c *object.Commit) error {
 * [getopts](https://pkg.go.dev/github.com/pborman/getopt)
 * [Concurrency and Parallelism "Crash Course"](https://levelup.gitconnected.com/a-crash-course-on-concurrency-parallelism-in-go-8ea935c9b0f8)
 * [Templates and Embed](https://philipptanlak.com/mastering-html-templates-in-go-the-fundamentals/#parsing-templates)
+* [Recursive copying](https://blog.depa.do/post/copy-files-and-directories-in-go). I love that you have to implement quite a few things by hand in Golang!
 
 ### Books
 
 * [Learning Go](https://miek.nl/go/learninggo.html)
+* [Lexical Scanning in Go](https://www.youtube.com/watch?v=HxaD_trXwRE)
