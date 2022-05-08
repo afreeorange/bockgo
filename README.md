@@ -17,6 +17,7 @@ go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
 ### TODO
 
 * [ ] Table of Contents
+* [ ] Configurable Syntax Highlight
 
 ---
 

@@ -4,8 +4,16 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }}</title>
+
+    <meta property="og:image" content="/img/logo512.png" />
+    <meta property="og:site_name" content="Nikhil's Personal Wiki" />
+
+    <link rel="og:image" href="/img/logo512.png" />
+    <link rel="icon" href="/img/favicon.png" />
+    <link rel="apple-touch-icon" href="/img/logo192.png" />
     <link rel="stylesheet" href="/css/styles.css" />
+
+    <title>{{ title }}</title>
   </head>
   <body>
     <noscript>
@@ -17,6 +25,12 @@
           <ul>
             <li><a href="/archive"{% if type == "archive" %}class="active"{% endif %}><span>Archive</span></a></li>
             <li><a href="/"{% if type == "home" %}class="active"{% endif %}><span>Home</span></a></li>
+
+            {% if type == "article" or type == "home" %}
+            <!-- <li><a href="{{ uri }}/raw"{% if type == "raw" %}class="active"{% endif %}><span>Raw</span></a></li> -->
+            <!-- <li><a href="{{ uri }}/revisions"{% if type == "revision-list" %}class="active"{% endif %}><span>Revisions</span></a></li> -->
+            <li><a href="{{ uri }}/index.json"><span>JSON</span></a></li>
+            {% endif %}
           </ul>
         </nav>
       </header>
@@ -31,7 +45,7 @@
           <li>{{ sizeInBytes }} bytes</li>
           {% endif %}
           {% if modified %}
-          <li>Modified on {{ modified }}</li>
+          <li>Modified on {{ modified | date:"Monday, 2 Jan 2006 at 15:04 MST" }}</li>
           {% endif %}
           <li>
             <a href="https://github.com/afreeorange/node-bock" title="Link to this project on Github">bock {{ version }}</a>

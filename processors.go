@@ -28,7 +28,7 @@ func processArticle(
 		URI:          uri,
 		Title:        title,
 		Size:         f.Size(),
-		FileModified: f.ModTime().UTC().Format(time.RFC3339),
+		FileModified: f.ModTime().UTC(),
 		Source:       string(contents),
 		Html:         "",
 	}
@@ -51,7 +51,7 @@ func processHome(
 	homePath := articleRoot + "/Home.md"
 	var contents []byte
 	var size int64
-	var mTime string
+	var mTime time.Time
 
 	f, err := os.Stat(homePath)
 
@@ -59,13 +59,13 @@ func processHome(
 		fmt.Println("Could not find Home.md... making one.")
 
 		contents = []byte("(You need to make a `Home.md` here!)")
-		mTime = time.Now().UTC().Format(time.RFC3339)
+		mTime = time.Now().UTC()
 		size = 0
 	} else {
 		g, _ := os.ReadFile(articleRoot + "/Home.md")
 
 		contents = g
-		mTime = f.ModTime().UTC().Format(time.RFC3339)
+		mTime = f.ModTime().UTC()
 		size = f.Size()
 	}
 
@@ -76,7 +76,7 @@ func processHome(
 		FileModified: mTime,
 		Source:       string(contents),
 		Html:         "",
-		URI:          "/",
+		URI:          "",
 	}
 	html := renderArticle(contents, item, "home")
 	item.Html = html

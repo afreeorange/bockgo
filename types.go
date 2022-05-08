@@ -1,13 +1,15 @@
 package main
 
+import "time"
+
 type Article struct {
-	ID           string `json:"id"`
-	URI          string `json:"uri"`
-	Size         int64  `json:"sizeInBytes"`
-	Title        string `json:"title"`
-	FileModified string `json:"modified"`
-	Source       string `json:"source"`
-	Html         string `json:"html"`
+	ID           string    `json:"id"`
+	URI          string    `json:"uri"`
+	Size         int64     `json:"sizeInBytes"`
+	Title        string    `json:"title"`
+	FileModified time.Time `json:"modified"`
+	Source       string    `json:"source"`
+	Html         string    `json:"html"`
 }
 
 type Author struct {
