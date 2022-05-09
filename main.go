@@ -50,11 +50,26 @@ func main() {
 
 	// Some bookkeeping
 	start := time.Now()
+	v, _ := mem.VirtualMemory()
 
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
+	statistics := Statistics{
+		GenerationTime: 0,
+		ArticleCount:   0,
+		CPUs:           runtime.NumCPU(),
+		Memory:         int(v.Total / (1024 * 1024 * 1024)),
+		Platform:       runtime.GOOS,
+		Architecture:   runtime.GOARCH,
+	}
 
-	articles, err := process(articleRoot, outputFolder)
+	config := BockConfig{
+		articleRoot:  articleRoot,
+		outputFolder: outputFolder,
+		statistics:   statistics,
+	}
+
+	articles, err := process(config)
 	if err != nil {
 		fmt.Println("Could not process article root: ", err)
 	}
@@ -67,23 +82,14 @@ func main() {
 	// 	fmt.Println(a.Title, a.FileModified)
 	// }
 
-	processArchive(articles, outputFolder)
-	copyAssets(articleRoot, outputFolder)
-	copyTemplateAssets(outputFolder)
+	processArchive(articles, config)
+	copyAssets(config)
+	copyTemplateAssets(config)
 
 	end := time.Now()
-	v, _ := mem.VirtualMemory()
-
-	statistics := Statistics{
-		GenerationTime: end.Sub(start),
-		ArticleCount:   len(articles),
-		CPUs:           runtime.NumCPU(),
-		Memory:         int(v.Total),
-		Platform:       runtime.GOOS,
-		Architecture:   runtime.GOARCH,
-	}
-	_ = statistics
 
 	fmt.Printf("Finished processing %d articles in %s", len(articles), end.Sub(start))
-	processHome(articleRoot, outputFolder)
+	config.statistics.GenerationTime = end.Sub(start)
+	config.statistics.ArticleCount = len(articles)
+	processHome(config)
 }

@@ -7,3 +7,7 @@
 {% block main %}
   {{ html | safe }}
 {% endblock main %}
+
+{% block statistics %}
+  There are {{ statistics.ArticleCount }} articles in this wiki. It took {{ statistics.GenerationTime }} to generate it on a {{ statistics.Platform }}/{{ statistics.Architecture }} system with {{ statistics.Memory }}GiB RAM and {{ statistics.CPUs }} cores.
+{% endblock statistics %}

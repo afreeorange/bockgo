@@ -7,7 +7,7 @@ import (
 	"github.com/flosch/pongo2/v5"
 )
 
-func renderArticle(source []byte, context Article, entityType string) string {
+func renderArticle(source []byte, context Article, entityType string, config BockConfig) string {
 	var conversionBuffer bytes.Buffer
 	if err := markdown.Convert(source, &conversionBuffer); err != nil {
 		panic(err)
@@ -27,8 +27,9 @@ func renderArticle(source []byte, context Article, entityType string) string {
 		"uri":         context.URI,
 		"html":        conversionBuffer.String(),
 
-		"type":    entityType,
-		"version": version,
+		"type":       entityType,
+		"version":    version,
+		"statistics": config.statistics,
 	})
 
 	conversionBuffer.Reset()

@@ -34,3 +34,9 @@ type Statistics struct {
 	Platform       string
 	Architecture   string
 }
+
+type BockConfig struct {
+	articleRoot  string
+	outputFolder string
+	statistics   Statistics
+}

@@ -6,11 +6,12 @@ import (
 	"path/filepath"
 
 	// TODO: Implement this yourself
+
 	cp "github.com/otiai10/copy"
 )
 
 // TODO: This can be smarter...
-func copyTemplateAssets(outputFolder string) {
+func copyTemplateAssets(config BockConfig) {
 	fmt.Print("Creating template assets...")
 
 	// Copy all the css, js, etc
@@ -21,11 +22,11 @@ func copyTemplateAssets(outputFolder string) {
 			break
 		}
 
-		os.MkdirAll(outputFolder+"/"+a, os.ModePerm)
+		os.MkdirAll(config.outputFolder+"/"+a, os.ModePerm)
 
 		for _, de := range d {
 			f, _ := templatesContent.ReadFile("template/" + a + "/" + de.Name())
-			os.WriteFile(outputFolder+"/"+a+"/"+de.Name(), f, os.ModePerm)
+			os.WriteFile(config.outputFolder+"/"+a+"/"+de.Name(), f, os.ModePerm)
 		}
 	}
 
@@ -35,17 +36,17 @@ func copyTemplateAssets(outputFolder string) {
 	for _, de := range d {
 		if filepath.Ext(de.Name()) != ".html" {
 			f, _ := templatesContent.ReadFile("template/" + de.Name())
-			os.WriteFile(outputFolder+"/"+de.Name(), f, os.ModePerm)
+			os.WriteFile(config.outputFolder+"/"+de.Name(), f, os.ModePerm)
 		}
 	}
 
 	fmt.Println("done.")
 }
 
-func copyAssets(articleRoot string, outputFolder string) {
+func copyAssets(config BockConfig) {
 	fmt.Print("Copying assets... ")
 
-	err := cp.Copy(articleRoot+"/__assets", outputFolder+"/assets")
+	err := cp.Copy(config.articleRoot+"/__assets", config.outputFolder+"/assets")
 	if err != nil {
 		fmt.Print("Oops, could not copy assets: ", err)
 	}

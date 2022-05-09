@@ -40,6 +40,9 @@
       </main>
       <footer>
         {% block footer %}{% endblock footer %}
+        {% if type == "home" %}
+        <p>{% block statistics %}{% endblock statistics %}</p>
+        {% endif %}
         <ul>
           {% if sizeInBytes %}
           <li>{{ sizeInBytes }} bytes</li>

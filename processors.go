@@ -7,18 +7,13 @@ import (
 	"time"
 )
 
-func processArticle(
-	articlePath string,
-	articleRoot string,
-	outputFolder string,
-	f os.FileInfo,
-) Article {
+func processArticle(articlePath string, config BockConfig, f os.FileInfo) Article {
 	// dir := strings.Replace(filepath.Dir(articlePath), articleRoot, "", -1)
 	// filePath := strings.Split(dir, "/")[1:]
 
 	fileName := f.Name()
 	title := removeExtensionFrom(fileName)
-	uri := makeUri(articlePath, articleRoot)
+	uri := makeUri(articlePath, config.articleRoot)
 
 	// fmt.Println("Writing", uri)
 
@@ -32,26 +27,25 @@ func processArticle(
 		Source:       string(contents),
 		Html:         "",
 	}
-	html := renderArticle(contents, item, "article")
+	html := renderArticle(contents, item, "article", config)
 	item.Html = html
 
-	os.MkdirAll(outputFolder+uri, os.ModePerm)
-	os.WriteFile(outputFolder+uri+"/index.html", []byte(html), os.ModePerm)
+	os.MkdirAll(config.outputFolder+uri, os.ModePerm)
+	os.WriteFile(config.outputFolder+uri+"/index.html", []byte(html), os.ModePerm)
 
 	jsonData, _ := jsonMarshal(item)
-	os.WriteFile(outputFolder+uri+"/index.json", jsonData, os.ModePerm)
+	os.WriteFile(config.outputFolder+uri+"/index.json", jsonData, os.ModePerm)
 
 	return item
 }
 
-func processHome(
-	articleRoot string,
-	outputFolder string,
-) {
-	homePath := articleRoot + "/Home.md"
+func processHome(config BockConfig) {
+	homePath := config.articleRoot + "/Home.md"
 	var contents []byte
 	var size int64
 	var mTime time.Time
+
+	fmt.Println(">>>", config.statistics.ArticleCount)
 
 	f, err := os.Stat(homePath)
 
@@ -62,7 +56,7 @@ func processHome(
 		mTime = time.Now().UTC()
 		size = 0
 	} else {
-		g, _ := os.ReadFile(articleRoot + "/Home.md")
+		g, _ := os.ReadFile(config.articleRoot + "/Home.md")
 
 		contents = g
 		mTime = f.ModTime().UTC()
@@ -70,7 +64,7 @@ func processHome(
 	}
 
 	item := Article{
-		ID:           makeID(articleRoot + "/Home.md"),
+		ID:           makeID(config.articleRoot + "/Home.md"),
 		Title:        "Hello!",
 		Size:         size,
 		FileModified: mTime,
@@ -78,40 +72,37 @@ func processHome(
 		Html:         "",
 		URI:          "",
 	}
-	html := renderArticle(contents, item, "home")
+	html := renderArticle(contents, item, "home", config)
 	item.Html = html
 
-	os.WriteFile(outputFolder+"/index.html", []byte(html), os.ModePerm)
+	os.WriteFile(config.outputFolder+"/index.html", []byte(html), os.ModePerm)
 
 	jsonData, _ := jsonMarshal(item)
-	os.WriteFile(outputFolder+"/index.json", jsonData, os.ModePerm)
+	os.WriteFile(config.outputFolder+"/index.json", jsonData, os.ModePerm)
 }
 
-func processArchive(articles []Article, outputFolder string) {
-	os.MkdirAll(outputFolder+"/archive", os.ModePerm)
+func processArchive(articles []Article, config BockConfig) {
+	os.MkdirAll(config.outputFolder+"/archive", os.ModePerm)
 	html := renderArchive(articles)
-	os.WriteFile(outputFolder+"/archive/index.html", []byte(html), os.ModePerm)
+	os.WriteFile(config.outputFolder+"/archive/index.html", []byte(html), os.ModePerm)
 }
 
-func process(
-	articleRoot string,
-	outputFolder string,
-) ([]Article, error) {
+func process(config BockConfig) ([]Article, error) {
 	files := []Article{}
 
-	err := filepath.Walk(articleRoot, func(path string, f os.FileInfo, err error) error {
+	err := filepath.Walk(config.articleRoot, func(path string, f os.FileInfo, err error) error {
 		if !IGNORED_FOLDERS_REGEX.MatchString(path) {
 
 			if !IGNORED_FILES_REGEX.MatchString(path) {
 				if filepath.Ext(path) == ".md" {
-					item := processArticle(path, articleRoot, outputFolder, f)
+					item := processArticle(path, config, f)
 					files = append(files, item)
 				}
 			}
 
 			// This is a folder
 			if f.IsDir() {
-				if path != articleRoot {
+				if path != config.articleRoot {
 					fmt.Println("Found", path)
 				}
 			}
