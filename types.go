@@ -25,3 +25,12 @@ type Revision struct {
 	Body    string `json:"body"`
 	Author  Author `json:"author"`
 }
+
+type Statistics struct {
+	GenerationTime time.Duration
+	ArticleCount   int
+	CPUs           int
+	Memory         int
+	Platform       string
+	Architecture   string
+}

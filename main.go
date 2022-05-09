@@ -5,9 +5,12 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/shirou/gopsutil/v3/mem"
 )
 
 //go:embed VERSION
@@ -45,6 +48,9 @@ func main() {
 		os.Exit(3)
 	}
 
+	// Some bookkeeping
+	start := time.Now()
+
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
 
@@ -62,7 +68,22 @@ func main() {
 	// }
 
 	processArchive(articles, outputFolder)
-	processHome(articleRoot, outputFolder)
 	copyAssets(articleRoot, outputFolder)
 	copyTemplateAssets(outputFolder)
+
+	end := time.Now()
+	v, _ := mem.VirtualMemory()
+
+	statistics := Statistics{
+		GenerationTime: end.Sub(start),
+		ArticleCount:   len(articles),
+		CPUs:           runtime.NumCPU(),
+		Memory:         int(v.Total),
+		Platform:       runtime.GOOS,
+		Architecture:   runtime.GOARCH,
+	}
+	_ = statistics
+
+	fmt.Printf("Finished processing %d articles in %s", len(articles), end.Sub(start))
+	processHome(articleRoot, outputFolder)
 }
