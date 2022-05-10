@@ -29,8 +29,8 @@ type Revision struct {
 type Statistics struct {
 	GenerationTime time.Duration
 	ArticleCount   int
-	CPUs           int
-	Memory         int
+	CPUCount       int
+	MemoryInGB     int
 	Platform       string
 	Architecture   string
 }

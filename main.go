@@ -57,8 +57,8 @@ func main() {
 	statistics := Statistics{
 		GenerationTime: 0,
 		ArticleCount:   0,
-		CPUs:           runtime.NumCPU(),
-		Memory:         int(v.Total / (1024 * 1024 * 1024)),
+		CPUCount:       runtime.NumCPU(),
+		MemoryInGB:     int(v.Total / (1024 * 1024 * 1024)),
 		Platform:       runtime.GOOS,
 		Architecture:   runtime.GOARCH,
 	}
@@ -87,9 +87,10 @@ func main() {
 	copyTemplateAssets(config)
 
 	end := time.Now()
+	elapsed := end.Sub(start)
 
-	fmt.Printf("Finished processing %d articles in %s", len(articles), end.Sub(start))
-	config.statistics.GenerationTime = end.Sub(start)
+	fmt.Printf("Finished processing %d articles in %s", len(articles), time.Duration.Round(elapsed, time.Millisecond))
+	config.statistics.GenerationTime = elapsed
 	config.statistics.ArticleCount = len(articles)
 	processHome(config)
 }
