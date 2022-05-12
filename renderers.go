@@ -7,7 +7,12 @@ import (
 	"github.com/flosch/pongo2/v5"
 )
 
-func renderArticle(source []byte, context Article, entityType string, config BockConfig) string {
+func renderArticle(
+	source []byte,
+	context Article,
+	entityType string,
+	config BockConfig,
+) (string, string) {
 	var conversionBuffer bytes.Buffer
 	if err := markdown.Convert(source, &conversionBuffer); err != nil {
 		panic(err)
@@ -17,8 +22,7 @@ func renderArticle(source []byte, context Article, entityType string, config Boc
 	data, _ := json.Marshal(context)
 	json.Unmarshal(data, &myMap)
 
-	t, _ := templateSet.FromCache("template/article.html")
-	o, _ := t.Execute(pongo2.Context{
+	baseContext := pongo2.Context{
 		"id":          context.ID,
 		"sizeInBytes": context.Size,
 		"title":       context.Title,
@@ -28,14 +32,27 @@ func renderArticle(source []byte, context Article, entityType string, config Boc
 		"html":        conversionBuffer.String(),
 		"hierarchy":   context.Hierarchy,
 
-		"type":       entityType,
 		"version":    version,
 		"statistics": config.statistics,
+	}
+
+	baseContext.Update(pongo2.Context{
+		"type": "article",
 	})
+
+	t1, _ := templateSet.FromCache("template/article.html")
+	o1, _ := t1.Execute(baseContext)
+
+	baseContext.Update(pongo2.Context{
+		"type": "raw",
+	})
+
+	t2, _ := templateSet.FromCache("template/raw.html")
+	o2, _ := t2.Execute(baseContext)
 
 	conversionBuffer.Reset()
 
-	return o
+	return o1, o2
 }
 
 func renderArchive(articles []Article) string {

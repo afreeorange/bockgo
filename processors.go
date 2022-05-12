@@ -28,11 +28,12 @@ func processArticle(articlePath string, config BockConfig, f os.FileInfo) Articl
 		Html:         "",
 		Hierarchy:    makeHierarchy(articlePath, config.articleRoot),
 	}
-	html := renderArticle(contents, item, "article", config)
+	html, raw := renderArticle(contents, item, "article", config)
 	item.Html = html
 
-	os.MkdirAll(config.outputFolder+uri, os.ModePerm)
+	os.MkdirAll(config.outputFolder+uri+"/raw", os.ModePerm)
 	os.WriteFile(config.outputFolder+uri+"/index.html", []byte(html), os.ModePerm)
+	os.WriteFile(config.outputFolder+uri+"/raw/index.html", []byte(raw), os.ModePerm)
 
 	jsonData, _ := jsonMarshal(item)
 	os.WriteFile(config.outputFolder+uri+"/index.json", jsonData, os.ModePerm)
@@ -72,10 +73,17 @@ func processHome(config BockConfig) {
 		URI:          "",
 		Hierarchy:    makeHierarchy("/Home.md", config.articleRoot),
 	}
-	html := renderArticle(contents, item, "home", config)
+	html, raw := renderArticle(contents, item, "home", config)
 	item.Html = html
 
+	os.MkdirAll(config.outputFolder+"/raw", os.ModePerm)
+	os.MkdirAll(config.outputFolder+"/Home/raw", os.ModePerm)
+
 	os.WriteFile(config.outputFolder+"/index.html", []byte(html), os.ModePerm)
+	os.WriteFile(config.outputFolder+"/Home/index.html", []byte(html), os.ModePerm)
+
+	os.WriteFile(config.outputFolder+"/raw/index.html", []byte(raw), os.ModePerm)
+	os.WriteFile(config.outputFolder+"/Home/raw/index.html", []byte(raw), os.ModePerm)
 
 	jsonData, _ := jsonMarshal(item)
 	os.WriteFile(config.outputFolder+"/index.json", jsonData, os.ModePerm)
