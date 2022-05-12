@@ -1,22 +1,13 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <nav>
-    <ul>
-      {% for node in hierarchy %}
-      <li>
-        <a data-entity-type="{{ node.Type }}" href="{%- if node.Name == "ROOT" -%}/ROOT{%- else -%}/{{ node.URI }}{%- endif -%}" title="{{ node.Name }}">
-        {%- if node.Name == "ROOT" -%}Root{%- else -%}{{ node.Name}}{%- endif -%}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </nav>
+  {% include "hierarchy.html" %}
   <h1>
     {{ title }}
     <span>Raw</span>
     <span><a href="/{{ uri }}" title="See the rendered version of this article">See Rendered</a></span>
   </h1>
+
 <pre>
 <code>{{ source | safe }}</code>
 </pre>

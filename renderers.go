@@ -67,3 +67,18 @@ func renderArchive(articles []Article) string {
 
 	return o
 }
+
+func renderFolder(context Folder) string {
+	t, _ := templateSet.FromCache("template/folder.html")
+	o, _ := t.Execute(pongo2.Context{
+		"title":     context.Title,
+		"children":  context.Children,
+		"hierarchy": context.Hierarchy,
+		"readme":    context.README,
+
+		"type":    "folder",
+		"version": version,
+	})
+
+	return o
+}

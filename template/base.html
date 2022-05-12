@@ -31,6 +31,10 @@
             <!-- <li><a href="{{ uri }}/revisions"{% if type == "revision-list" %}class="active"{% endif %}><span>Revisions</span></a></li> -->
             <li><a href="{{ uri }}/index.json"><span>JSON</span></a></li>
             {% endif %}
+
+            {% if type == "folder" %}
+            <li><a href="{{ uri }}/index.json"><span>JSON</span></a></li>
+            {% endif %}
           </ul>
         </nav>
       </header>
@@ -46,9 +50,11 @@
           {% if sizeInBytes %}
           <li>{{ sizeInBytes }} bytes</li>
           {% endif %}
+
           {% if modified %}
           <li>Modified on {{ modified | date:"Monday, 2 Jan 2006 at 15:04 MST" }}</li>
           {% endif %}
+
           <li>
             <a href="https://github.com/afreeorange/node-bock" title="Link to this project on Github">bock {{ version }}</a>
           </li>
