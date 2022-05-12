@@ -22,21 +22,21 @@ func jsonMarshal(t interface{}) ([]byte, error) {
 	return buffer.Bytes(), err
 }
 
-func makeUri(articlePath string, articleRoot string) string {
-	uri := strings.ReplaceAll(strings.Replace(articlePath, articleRoot, "", -1), " ", "_")
+func makeUri(path string, articleRoot string) string {
+	uri := strings.ReplaceAll(strings.Replace(path, articleRoot, "", -1), " ", "_")
 	return strings.TrimSuffix(uri, filepath.Ext(uri))
 }
 
-func makeID(articlePath string) string {
-	return uuid.NewV5(uuid.NamespaceURL, articlePath).String()
+func makeID(path string) string {
+	return uuid.NewV5(uuid.NamespaceURL, path).String()
 }
 
-func removeExtensionFrom(articlePath string) string {
-	return strings.TrimSuffix(articlePath, filepath.Ext(articlePath))
+func removeExtensionFrom(path string) string {
+	return strings.TrimSuffix(path, filepath.Ext(path))
 }
 
-func makeHierarchy(articlePath string, articleRoot string) []Hierarchy {
-	a := strings.Replace(articlePath, articleRoot, "", -1)
+func makeHierarchy(path string, articleRoot string) []Hierarchy {
+	a := strings.Replace(path, articleRoot, "", -1)
 	b := strings.Split(a, "/")
 	c := []Hierarchy{}
 

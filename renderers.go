@@ -75,6 +75,7 @@ func renderFolder(context Folder) string {
 		"children":  context.Children,
 		"hierarchy": context.Hierarchy,
 		"readme":    context.README,
+		"uri":       context.URI,
 
 		"type":    "folder",
 		"version": version,

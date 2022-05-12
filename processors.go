@@ -99,21 +99,28 @@ func processFolder(path string, config BockConfig) ([]FolderThing, []FolderThing
 	title := strings.TrimLeft(strings.Replace(path, config.articleRoot, "", -1), "/")
 
 	for _, f := range l {
-		if f.IsDir() {
-			folders = append(folders, FolderThing{
-				Name: f.Name(),
-				Type: "folder",
-				Path: "a",
-				URI:  makeUri(path, config.articleRoot),
-			})
-		} else {
-			articles = append(articles, FolderThing{
-				Name: f.Name(),
-				Type: "article",
-				Path: "a",
-				URI:  makeUri(path, config.articleRoot),
-			})
+		if !IGNORED_FOLDERS_REGEX.MatchString(f.Name()) {
+			if f.IsDir() {
+				folders = append(folders, FolderThing{
+					Name: removeExtensionFrom(f.Name()),
+					Type: "folder",
+					URI:  makeUri(path, config.articleRoot) + "/" + makeUri(f.Name(), config.articleRoot),
+				})
+			} else {
+				articles = append(articles, FolderThing{
+					Name: removeExtensionFrom(f.Name()),
+					Type: "article",
+					URI:  makeUri(path, config.articleRoot) + "/" + makeUri(f.Name(), config.articleRoot),
+				})
+			}
 		}
+	}
+
+	// Check if the folder has a readme
+	readme := ""
+	r, err := os.ReadFile(path + "/README.md")
+	if err == nil {
+		readme = string(r)
 	}
 
 	context := Folder{
@@ -125,19 +132,24 @@ func processFolder(path string, config BockConfig) ([]FolderThing, []FolderThing
 			Folders:  folders,
 		},
 		Hierarchy: makeHierarchy(path, config.articleRoot),
-		README:    "",
+		README:    readme,
 	}
-
-	// d, _ := json.MarshalIndent(context, "", "  ")
-	// fmt.Print(string(d))
 
 	html := renderFolder(context)
 
-	os.MkdirAll(config.outputFolder+"/"+makeUri(path, config.articleRoot), os.ModePerm)
-	os.WriteFile(config.outputFolder+"/"+makeUri(path, config.articleRoot)+"/index.html", []byte(html), os.ModePerm)
+	if path != config.articleRoot {
+		os.MkdirAll(config.outputFolder+"/"+makeUri(path, config.articleRoot), os.ModePerm)
+		os.WriteFile(config.outputFolder+"/"+makeUri(path, config.articleRoot)+"/index.html", []byte(html), os.ModePerm)
 
-	jsonData, _ := jsonMarshal(context)
-	os.WriteFile(config.outputFolder+"/"+makeUri(path, config.articleRoot)+"/index.json", jsonData, os.ModePerm)
+		jsonData, _ := jsonMarshal(context)
+		os.WriteFile(config.outputFolder+"/"+makeUri(path, config.articleRoot)+"/index.json", jsonData, os.ModePerm)
+	} else {
+		os.MkdirAll(config.outputFolder+"/ROOT", os.ModePerm)
+		os.WriteFile(config.outputFolder+"/ROOT/index.html", []byte(html), os.ModePerm)
+
+		jsonData, _ := jsonMarshal(context)
+		os.WriteFile(config.outputFolder+"/ROOT/index.json", jsonData, os.ModePerm)
+	}
 
 	return folders, articles
 }
@@ -157,9 +169,7 @@ func process(config BockConfig) ([]Article, error) {
 
 			// This is a folder
 			if f.IsDir() {
-				if path != config.articleRoot {
-					processFolder(path, config)
-				}
+				processFolder(path, config)
 			}
 
 			// The Homepage is special and will be processed separately.
