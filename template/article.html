@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}
-  {{ title }}
-{% endblock title %}
-
 {% block main %}
   <nav>
     <ul>
@@ -16,6 +12,7 @@
       {% endfor %}
     </ul>
   </nav>
+  <h1>{{ title }}</h1>
   {{ html | safe }}
 {% endblock main %}
 

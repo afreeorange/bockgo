@@ -98,8 +98,9 @@ kbd {
 }
 
 a {
-  color: var(--color-highlight);
+  color: var(--color-foreground);
   text-underline-offset: 1px;
+  text-decoration-color: var(--color-highlight);
 }
 a:hover {
   color: var(--color-highlight-light);

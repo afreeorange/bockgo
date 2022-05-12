@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}
-  {{ title }}
-{% endblock title %}
-
 {% block main %}
+  <h1>Articles <span>{{ articles | length }}</span></h1>
+
   {% for article in articles %}
   <li>
     <a href="{{ article.URI }}" title="{{ article.Title }}">{{ article.Title }}</a>
