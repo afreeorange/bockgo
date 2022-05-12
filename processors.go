@@ -26,6 +26,7 @@ func processArticle(articlePath string, config BockConfig, f os.FileInfo) Articl
 		FileModified: f.ModTime().UTC(),
 		Source:       string(contents),
 		Html:         "",
+		Hierarchy:    makeHierarchy(articlePath, config.articleRoot),
 	}
 	html := renderArticle(contents, item, "article", config)
 	item.Html = html
@@ -44,8 +45,6 @@ func processHome(config BockConfig) {
 	var contents []byte
 	var size int64
 	var mTime time.Time
-
-	fmt.Println(">>>", config.statistics.ArticleCount)
 
 	f, err := os.Stat(homePath)
 
@@ -71,6 +70,7 @@ func processHome(config BockConfig) {
 		Source:       string(contents),
 		Html:         "",
 		URI:          "",
+		Hierarchy:    makeHierarchy("/Home.md", config.articleRoot),
 	}
 	html := renderArticle(contents, item, "home", config)
 	item.Html = html

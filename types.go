@@ -2,14 +2,21 @@ package main
 
 import "time"
 
+type Hierarchy struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+	URI  string `json:"uri"`
+}
+
 type Article struct {
-	ID           string    `json:"id"`
-	URI          string    `json:"uri"`
-	Size         int64     `json:"sizeInBytes"`
-	Title        string    `json:"title"`
-	FileModified time.Time `json:"modified"`
-	Source       string    `json:"source"`
-	Html         string    `json:"html"`
+	ID           string      `json:"id"`
+	URI          string      `json:"uri"`
+	Size         int64       `json:"sizeInBytes"`
+	Title        string      `json:"title"`
+	FileModified time.Time   `json:"modified"`
+	Source       string      `json:"source"`
+	Html         string      `json:"html"`
+	Hierarchy    []Hierarchy `json:"hierarchy"`
 }
 
 type Author struct {

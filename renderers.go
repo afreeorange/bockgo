@@ -26,6 +26,7 @@ func renderArticle(source []byte, context Article, entityType string, config Boc
 		"source":      context.Source,
 		"uri":         context.URI,
 		"html":        conversionBuffer.String(),
+		"hierarchy":   context.Hierarchy,
 
 		"type":       entityType,
 		"version":    version,
