@@ -9,14 +9,14 @@
   --font-size-small: small;
 
   /* Colors */
-  --color-background: #fff;
-  --color-foreground: #101010;
+  --color-background: #1d2021;
+  --color-foreground: #fff;
   --color-grey-dark: #666;
   --color-grey-light: #ccc;
   --color-grey-superlight: #eee;
   --color-grey: #999;
-  --color-highlight: #ff3300;
-  --color-highlight-light: #ff0000;
+  --color-highlight: #fb4934;
+  --color-highlight-light: #cc241d;
 
   /* Other */
   --transition-duration: 0.25s;
@@ -45,7 +45,7 @@ code {
  *
  * A simple stylesheet for rendering beautiful keyboard-style elements.
  *
- * Author:  Michael HÃ¼neburg
+ * Author:  Michael HÃƒÂ¼neburg
  * Website: http://michaelhue.com/keyscss
  * License: MIT License (see LICENSE.txt)
  */
@@ -359,7 +359,7 @@ footer li a::before {
   text-decoration: none;
 }
 .container.raw main h1 span:nth-of-type(2) {
-  background-color: var(--color-foreground);
+  background-color: var(--color-highlight);
 }
 .container.raw main h1 span:nth-of-type(2):hover {
   background-color: var(--color-highlight-light);
@@ -407,6 +407,11 @@ footer li a::before {
 .container.archive main ul[data-content="results"] li {
   margin: 1em 0;
   border-top: none !important;
+}
+
+.container.folder ul {
+  list-style-type: none;
+  padding: 0;
 }
 
 .container.revision-list main ul {
