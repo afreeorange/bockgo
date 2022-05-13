@@ -2,6 +2,10 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  # https://circleci.com/developer/orbs/orb/circleci/aws-s3
+  aws-s3: circleci/aws-s3@2.0.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -23,7 +27,13 @@ jobs:
           command: go mod download
       - run:
           name: Compile
-          command: go build -o bock .
+          command: go build -o "bock-linux-`cat VERSION`" .
+      - aws-s3/sync:
+          aws-region: AWS_DEFAULT_REGION
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          from: "bock-linux-`cat VERSION`"
+          to: "s3://public.nikhil.io/bock-linux-`cat VERSION`"
       - save_cache:
           key: go-mod-v4-{{ checksum "go.sum" }}
           paths:
