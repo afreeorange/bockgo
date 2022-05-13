@@ -61,6 +61,7 @@ func main() {
 		MemoryInGB:     int(v.Total / (1024 * 1024 * 1024)),
 		Platform:       runtime.GOOS,
 		Architecture:   runtime.GOARCH,
+		BuildDate:      time.Now().UTC(),
 	}
 
 	config := BockConfig{

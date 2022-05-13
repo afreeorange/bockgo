@@ -54,6 +54,7 @@ type Statistics struct {
 	MemoryInGB     int           `json:"memoryInGB"`
 	Platform       string        `json:"platform"`
 	Architecture   string        `json:"architecture"`
+	BuildDate      time.Time     `json:"buildTime"`
 }
 
 type BockConfig struct {
