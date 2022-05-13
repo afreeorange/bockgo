@@ -21,7 +21,7 @@
     <noscript>
       👉 A few things won&#8217;t work if you have JavaScript disabled.
     </noscript>
-    <div class="container {{ type }}">
+    <div class="container{% if type %} {{ type }}{% endif %}">
       <header>
         <nav>
           <ul>
@@ -45,6 +45,7 @@
       </main>
       <footer>
         {% block footer %}{% endblock footer %}
+
         {% if type == "home" %}
         <p>{% block statistics %}{% endblock statistics %}</p>
         {% endif %}

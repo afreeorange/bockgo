@@ -18,6 +18,7 @@ go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
 
 * [ ] Table of Contents
 * [ ] Configurable Syntax Highlight
+* [ ] Fix builds on cimg/go:1.18
 
 ---
 
