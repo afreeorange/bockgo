@@ -37,14 +37,18 @@ func renderArticle(
 	}
 
 	baseContext.Update(pongo2.Context{
-		"type": "article",
+		"type": entityType,
 	})
 
 	t1, _ := templateSet.FromCache("template/article.html")
 	o1, _ := t1.Execute(baseContext)
 
+	// var sourceBuffer bytes.Buffer
+	// quick.Highlight(&sourceBuffer, context.Source, "markdown", "html", "monokai")
+
 	baseContext.Update(pongo2.Context{
 		"type": "raw",
+		// "source": sourceBuffer.String(),
 	})
 
 	t2, _ := templateSet.FromCache("template/raw.html")

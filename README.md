@@ -17,8 +17,9 @@ go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
 ### TODO
 
 * [ ] Table of Contents
-* [ ] Configurable Syntax Highlight
+* [x] Configurable Syntax Highlight
 * [ ] Fix builds on cimg/go:1.18
+* [ ] [Markdown highlight in Raw view](https://www.zupzup.org/go-markdown-syntax-highlight-chroma/)
 
 ---
 

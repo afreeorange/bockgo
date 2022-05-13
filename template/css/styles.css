@@ -1,6 +1,6 @@
 :root {
   /* Measurements */
-  --border-radius: 0.25em;
+  --border-radius: 0.5em;
   --line-height: 1.5;
   --max-width: 75%;
   --root-spacing: 1em;
@@ -15,8 +15,8 @@
   --color-grey-light: #ccc;
   --color-grey-superlight: #eee;
   --color-grey: #999;
-  --color-highlight: #fb4934;
-  --color-highlight-light: #cc241d;
+  --color-highlight: #cc241d;
+  --color-highlight-light: #fb4934;
 
   /* Other */
   --transition-duration: 0.25s;
@@ -59,9 +59,9 @@ kbd,
     monospace;
   text-align: center;
   text-decoration: none;
-  -moz-border-radius: 0.3em;
-  -webkit-border-radius: 0.3em;
-  border-radius: 0.3em;
+  -moz-border-radius: var(--border-radius);
+  -webkit-border-radius: var(--border-radius);
+  border-radius: var(--border-radius);
   border: none;
   cursor: default;
   -moz-user-select: none;
@@ -263,7 +263,7 @@ main nav ul li:not(:last-child) a::after {
 h1 > span,
 h2 > span {
   background-color: var(--color-highlight-light);
-  border-radius: 2em;
+  border-radius: var(--border-radius);
   color: white;
   display: inline-flex;
   font-size: 14px;
@@ -284,7 +284,6 @@ main pre {
 }
 
 main form[role="search"] input {
-  border-radius: 0.25em;
   border-radius: var(--border-radius);
   border: 0;
   font-size: 150%;
