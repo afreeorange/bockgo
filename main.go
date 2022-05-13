@@ -89,7 +89,12 @@ func main() {
 	end := time.Now()
 	elapsed := end.Sub(start)
 
-	fmt.Printf("Finished processing %d articles in %s", len(articles), time.Duration.Round(elapsed, time.Millisecond))
+	fmt.Printf(
+		"Finished processing %d articles in %s\n",
+		len(articles),
+		time.Duration.Round(elapsed, time.Millisecond),
+	)
+
 	config.statistics.GenerationTime = elapsed
 	config.statistics.ArticleCount = len(articles)
 	processHome(config)

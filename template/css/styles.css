@@ -37,7 +37,7 @@ pre,
 code {
   font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
     monospace;
-  font-size: 95%;
+  font-size: 100%;
 }
 
 /**
@@ -381,32 +381,30 @@ footer li a::before {
   animation: rotation 4s infinite cubic-bezier(1, 2.5, 0, 1.5);
 }
 
-.container.search main ul {
+.container.archive main ul {
   margin: var(--root-spacing) 0;
   padding: 0;
   list-style-type: none;
 }
 
-.container.search main ul a {
-  color: var(--color-foreground);
-  text-decoration: none;
-}
-
-.container.search main ul a:hover {
+.container.archive main ul a:hover {
   color: var(--color-highlight);
   text-decoration: underline;
 }
 
-.container.search main ul li:not(:first-child) {
+.container.archive main ul li:not(:first-child) {
   border-top: 1px dotted var(--color-grey-light);
   padding: 0.25em 0;
 }
 
-.container.search main ul li small {
+.container.archive main ul li {
+  color: var(--color-grey-light);
+}
+.container.archive main ul li span {
   color: var(--color-grey);
 }
 
-.container.search main ul[data-content="results"] li {
+.container.archive main ul[data-content="results"] li {
   margin: 1em 0;
   border-top: none !important;
 }
