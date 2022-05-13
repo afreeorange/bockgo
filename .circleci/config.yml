@@ -29,7 +29,7 @@ jobs:
           name: Compile
           command: |
             - mkdir dist
-            - go build -o dist/bock .
+            - go build -o "dist/bock-linux-`cat VERSION`" .
       - aws-s3/sync:
           aws-region: AWS_DEFAULT_REGION
           aws-access-key-id: AWS_ACCESS_KEY_ID
