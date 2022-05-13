@@ -75,10 +75,10 @@ func processHome(config BockConfig) {
 
 	os.MkdirAll(config.outputFolder+"/raw", os.ModePerm)
 	os.WriteFile(config.outputFolder+"/index.html", []byte(html), os.ModePerm)
-	os.WriteFile(config.outputFolder+"/Home/index.html", []byte(html), os.ModePerm)
+	os.WriteFile(config.outputFolder+"/raw/index.html", []byte(raw), os.ModePerm)
 
 	os.MkdirAll(config.outputFolder+"/Home/raw", os.ModePerm)
-	os.WriteFile(config.outputFolder+"/raw/index.html", []byte(raw), os.ModePerm)
+	os.WriteFile(config.outputFolder+"/Home/index.html", []byte(html), os.ModePerm)
 	os.WriteFile(config.outputFolder+"/Home/raw/index.html", []byte(raw), os.ModePerm)
 
 	jsonData, _ := jsonMarshal(item)
