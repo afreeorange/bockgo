@@ -9,8 +9,8 @@
   --font-size-small: small;
 
   /* Colors */
-  --color-background: #1d2021;
-  --color-foreground: #fff;
+  --color-background: #fff;
+  --color-foreground: #1d2021;
   --color-grey-dark: #666;
   --color-grey-light: #ccc;
   --color-grey-superlight: #eee;
