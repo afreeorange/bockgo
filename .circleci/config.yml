@@ -27,13 +27,15 @@ jobs:
           command: go mod download
       - run:
           name: Compile
-          command: go build -o "bock-linux-`cat VERSION`" .
+          command: |
+            - mkdir dist
+            - go build -o dist/bock .
       - aws-s3/sync:
           aws-region: AWS_DEFAULT_REGION
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          from: "bock-linux-`cat VERSION`"
-          to: "s3://public.nikhil.io/bock-linux-`cat VERSION`"
+          from: dist/
+          to: "s3://public.nikhil.io/"
       - save_cache:
           key: go-mod-v4-{{ checksum "go.sum" }}
           paths:
