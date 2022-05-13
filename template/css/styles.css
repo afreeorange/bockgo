@@ -354,14 +354,14 @@ footer li a::before {
   margin-top: 0.4em;
 }
 
-.container.raw main h1 span:nth-of-type(2) a {
+.container.raw main h1 span:nth-of-type(1) a {
   color: white;
   text-decoration: none;
 }
-.container.raw main h1 span:nth-of-type(2) {
+.container.raw main h1 span:nth-of-type(1) {
   background-color: var(--color-highlight);
 }
-.container.raw main h1 span:nth-of-type(2):hover {
+.container.raw main h1 span:nth-of-type(1):hover {
   background-color: var(--color-highlight-light);
 }
 
@@ -392,16 +392,18 @@ footer li a::before {
   text-decoration: underline;
 }
 
-.container.archive main ul li:not(:first-child) {
+.container.archive main ul li {
   border-top: 1px dotted var(--color-grey-light);
-  padding: 0.25em 0;
+  padding: 0.5em 0;
 }
-
 .container.archive main ul li {
   color: var(--color-grey-light);
 }
 .container.archive main ul li span {
   color: var(--color-grey);
+}
+.container.archive main ul li:first-child {
+  border: 0;
 }
 
 .container.archive main ul[data-content="results"] li {
