@@ -37,7 +37,7 @@ func renderArticle(
 	}
 
 	baseContext.Update(pongo2.Context{
-		"type": entityType,
+		"type": "article",
 	})
 
 	t1, _ := templateSet.FromCache("template/article.html")

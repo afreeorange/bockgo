@@ -12,6 +12,7 @@
     <link rel="icon" href="/img/favicon.png" />
     <link rel="apple-touch-icon" href="/img/logo192.png" />
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/highlight.css" />
 
     <title>{{ title }}</title>
 
@@ -45,10 +46,7 @@
       </main>
       <footer>
         {% block footer %}{% endblock footer %}
-
-        {% if type == "home" %}
-        <p>{% block statistics %}{% endblock statistics %}</p>
-        {% endif %}
+        <p>{% if type == "home" %}{% block statistics %}{% endblock statistics %}{% endif %}</p>
         <ul>
           {% if sizeInBytes %}
           <li>{{ sizeInBytes }} bytes</li>

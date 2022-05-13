@@ -4,6 +4,7 @@ import (
 	"embed"
 	"regexp"
 
+	chroma "github.com/alecthomas/chroma/formatters/html"
 	"github.com/flosch/pongo2/v5"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting"
@@ -28,7 +29,11 @@ var markdown = goldmark.New(
 		extension.Table,
 		extension.Typographer,
 		extension.GFM,
-		highlighting.Highlighting,
+		highlighting.NewHighlighting(
+			highlighting.WithFormatOptions(
+				chroma.WithClasses(true),
+			),
+		),
 	),
 )
 
