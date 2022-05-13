@@ -55,13 +55,13 @@ func main() {
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
 	statistics := Statistics{
-		GenerationTime: 0,
+		Architecture:   runtime.GOARCH,
 		ArticleCount:   0,
+		BuildDate:      time.Now().UTC(),
 		CPUCount:       runtime.NumCPU(),
+		GenerationTime: 0,
 		MemoryInGB:     int(v.Total / (1024 * 1024 * 1024)),
 		Platform:       runtime.GOOS,
-		Architecture:   runtime.GOARCH,
-		BuildDate:      time.Now().UTC(),
 	}
 
 	config := BockConfig{
@@ -74,14 +74,6 @@ func main() {
 	if err != nil {
 		fmt.Println("Could not process article root: ", err)
 	}
-
-	// https://stackoverflow.com/questions/28999735/what-is-the-shortest-way-to-simply-sort-an-array-of-structs-by-arbitrary-field
-	// sortedArticles, _ := sort.Slice(articles, func(i, j int) bool {
-	// 	return articles[i].FileModified > articles[j].FileModified
-	// })
-	// for _, a := range articles {
-	// 	fmt.Println(a.Title, a.FileModified)
-	// }
 
 	processArchive(articles, config)
 	copyAssets(config)

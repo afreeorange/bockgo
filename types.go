@@ -9,14 +9,14 @@ type Hierarchy struct {
 }
 
 type Article struct {
-	ID           string      `json:"id"`
-	URI          string      `json:"uri"`
-	Size         int64       `json:"sizeInBytes"`
-	Title        string      `json:"title"`
 	FileModified time.Time   `json:"modified"`
-	Source       string      `json:"source"`
-	Html         string      `json:"html"`
 	Hierarchy    []Hierarchy `json:"hierarchy"`
+	Html         string      `json:"html"`
+	ID           string      `json:"id"`
+	Size         int64       `json:"sizeInBytes"`
+	Source       string      `json:"source"`
+	Title        string      `json:"title"`
+	URI          string      `json:"uri"`
 }
 
 type Children struct {
@@ -25,12 +25,12 @@ type Children struct {
 }
 
 type Folder struct {
-	ID        string      `json:"id"`
-	URI       string      `json:"uri"`
-	Title     string      `json:"title"`
-	Hierarchy []Hierarchy `json:"hierarchy"`
 	Children  Children    `json:"children"`
+	Hierarchy []Hierarchy `json:"hierarchy"`
+	ID        string      `json:"id"`
 	README    string      `json:"readme"`
+	Title     string      `json:"title"`
+	URI       string      `json:"uri"`
 }
 
 type Author struct {
@@ -39,22 +39,22 @@ type Author struct {
 }
 
 type Revision struct {
+	Author  Author `json:"author"`
+	Body    string `json:"body"`
+	Date    string `json:"date"`
 	Id      string `json:"id"`
 	ShortId string `json:"shortId"`
-	Date    string `json:"date"`
 	Subject string `json:"subject"`
-	Body    string `json:"body"`
-	Author  Author `json:"author"`
 }
 
 type Statistics struct {
-	GenerationTime time.Duration `json:"generationTime"`
+	Architecture   string        `json:"architecture"`
 	ArticleCount   int           `json:"articleCount"`
+	BuildDate      time.Time     `json:"buildTime"`
 	CPUCount       int           `json:"cpuCount"`
+	GenerationTime time.Duration `json:"generationTime"`
 	MemoryInGB     int           `json:"memoryInGB"`
 	Platform       string        `json:"platform"`
-	Architecture   string        `json:"architecture"`
-	BuildDate      time.Time     `json:"buildTime"`
 }
 
 type BockConfig struct {
