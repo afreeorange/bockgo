@@ -1,15 +1,18 @@
 package main
 
 import (
+	"database/sql"
 	_ "embed"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"runtime"
 	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
@@ -43,7 +46,9 @@ func main() {
 		os.Exit(2)
 	}
 
-	if _, err := git.PlainOpen(articleRoot); err != nil {
+	repository, err := git.PlainOpen(articleRoot)
+
+	if err != nil {
 		fmt.Println("That article root does not appear to be a git repository.")
 		os.Exit(3)
 	}
@@ -70,7 +75,58 @@ func main() {
 		statistics:   statistics,
 	}
 
-	articles, err := process(config)
+	// Set up the database
+	dbPath := config.outputFolder + "/articles.db"
+	os.Remove(dbPath)
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	sqlStmt := `
+	CREATE TABLE IF NOT EXISTS articles (
+    id              TEXT NOT NULL UNIQUE,
+    content         TEXT,
+    modified        TEXT NOT NULL,
+    title           TEXT NOT NULL,
+    uri             TEXT NOT NULL
+  );
+  CREATE VIRTUAL TABLE articles_fts USING fts5(
+    id,
+    content,
+    modified,
+    title,
+    uri,
+    content="articles"
+  );
+  CREATE TRIGGER fts_update AFTER INSERT ON articles
+    BEGIN
+      INSERT INTO articles_fts (
+        id,
+        content,
+        modified,
+        title,
+        uri
+      )
+      VALUES (
+        new.id,
+        new.content,
+        new.modified,
+        new.title,
+        new.uri
+      );
+  END;
+	`
+	_, err = db.Exec(sqlStmt)
+	if err != nil {
+		log.Printf("%q: %s\n", err, sqlStmt)
+		return
+	}
+
+	// --- End Database Setup ---
+
+	articles, err := process(config, repository, db)
 	if err != nil {
 		fmt.Println("Could not process article root: ", err)
 	}

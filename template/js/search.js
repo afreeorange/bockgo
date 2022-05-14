@@ -1,4 +1,4 @@
-const REMOTE_DATABASE = "/entities.db";
+const REMOTE_DATABASE = "/articles.db";
 
 (async () => {
   config = {
@@ -24,7 +24,7 @@ const REMOTE_DATABASE = "/entities.db";
   const template = `
    {% for row in rows %}
    <li>
-     <a href="/{{ row.uri }}" title="{{ row.name }}">{{ row.highlightedPath | arrowPath | markMatch | safe }}</a>
+     <a href="/{{ row.uri }}" title="{{ row.title }}">{{ row.highlightedTitle | arrowPath | markMatch | safe }}</a>
      <br />
      <small>
        {{ row.content | markMatch | safe }}
@@ -48,12 +48,11 @@ const REMOTE_DATABASE = "/entities.db";
       const thingSearchStatement = db.prepare(`
       SELECT
         uri,
-        name,
-        highlight(articles_fts, 6, '>>>', '<<<') as highlightedPath,
-        snippet(articles_fts, 1, '>>>', '<<<', '...', 50) as content,
-        path
+        title,
+        highlight(articles_fts, 3, '>>>', '<<<') as highlightedTitle,
+        snippet(articles_fts, 1, '>>>', '<<<', '...', 50) as content
       FROM articles_fts
-      WHERE articles_fts MATCH 'path:${term}* OR content:${term}*'
+      WHERE articles_fts MATCH 'title:${term}* OR content:${term}*'
       ORDER BY RANK
       LIMIT 100
       `);

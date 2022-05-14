@@ -23,6 +23,10 @@ go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
 
 ---
 
+```bash
+rm -rf ~/Desktop/temp/*; time go run --tags "fts5" . -a /Users/nikhilanand/personal/wiki.nikhil.io.articles -o /Users/nikhilanand/Desktop/temp
+```
+
 ```go
 r, _ := git.PlainOpen(*articleRoot)
 
@@ -68,6 +72,8 @@ commits.ForEach(func(c *object.Commit) error {
 * [Templates and Embed](https://philipptanlak.com/mastering-html-templates-in-go-the-fundamentals/#parsing-templates)
 * [Recursive copying](https://blog.depa.do/post/copy-files-and-directories-in-go). I love that you have to implement quite a few things by hand in Golang!
 * [Chroma/Pygment style reference](https://xyproto.github.io/splash/docs/all.html)
+* [Enabling FTS5 with `go-sqlite`](https://github.com/mattn/go-sqlite3/issues/340)
+* [Build Tags in Golang](https://www.digitalocean.com/community/tutorials/customizing-go-binaries-with-build-tags)
 
 ### Books
 

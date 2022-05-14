@@ -8,6 +8,14 @@ type Hierarchy struct {
 	URI  string `json:"uri"`
 }
 
+type Revision struct {
+	Id      string `json:"id"`
+	ShortId string `json:"shortId"`
+	Date    string `json:"date"`
+	Subject string `json:"subject"`
+	Body    string `json:"body"`
+}
+
 type Article struct {
 	FileModified time.Time   `json:"modified"`
 	Hierarchy    []Hierarchy `json:"hierarchy"`
@@ -17,6 +25,7 @@ type Article struct {
 	Source       string      `json:"source"`
 	Title        string      `json:"title"`
 	URI          string      `json:"uri"`
+	Revisions    []Revision  `json:"revisions"`
 }
 
 type Children struct {
@@ -31,20 +40,6 @@ type Folder struct {
 	README    string      `json:"readme"`
 	Title     string      `json:"title"`
 	URI       string      `json:"uri"`
-}
-
-type Author struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
-type Revision struct {
-	Author  Author `json:"author"`
-	Body    string `json:"body"`
-	Date    string `json:"date"`
-	Id      string `json:"id"`
-	ShortId string `json:"shortId"`
-	Subject string `json:"subject"`
 }
 
 type Statistics struct {

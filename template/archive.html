@@ -3,7 +3,12 @@
 {% block main %}
   <h1>Articles <span>{{ articles | length }}</span></h1>
 
-  <ul>
+  <form role="search">
+    <input placeholder="3 or more characters" autofocus />
+  </form>
+  <ul data-content="results"></ul>
+
+  <ul data-content="list-of-articles">
     {% for article in articles %}
     <li>
       {% for h in article.Hierarchy %}
@@ -16,4 +21,8 @@
     </li>
     {% endfor %}
   </ul>
+
+  <script src="/js/nunjucks.min.js"></script>
+  <script src="/js/sql-wasm.js"></script>
+  <script src="/js/search.js"></script>
 {% endblock main %}

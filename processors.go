@@ -1,18 +1,55 @@
 package main
 
 import (
+	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/go-git/go-git/v5"
 )
 
-func processArticle(articlePath string, config BockConfig, f os.FileInfo) Article {
+func getCommits(repository *git.Repository, fileName string, config BockConfig, revisionsChannel chan []Revision) []Revision {
+	o, err := exec.Command(
+		"git",
+		"-C",
+		config.articleRoot,
+		"log",
+		`--pretty=format:'{"id": "%H", "shortId": "%h", "subject": "%f", "body": "%b", "date": "%aD"}'`,
+		fileName,
+	).Output()
+
+	res := []Revision{}
+
+	if err != nil {
+		fmt.Println("Error getting commits:", err)
+		return res
+	} else {
+		s := string(o)
+		s = strings.ReplaceAll(s, "'\n'", ",")
+		s = strings.ReplaceAll(s, "'", "")
+		s = strings.ReplaceAll(s, "\n", "")
+		s = "[" + s + "]"
+
+		json.Unmarshal([]byte(s), &res)
+	}
+
+	revisionsChannel <- res
+
+	return res
+}
+
+func processArticle(articlePath string, config BockConfig, f os.FileInfo, repository *git.Repository, stmt *sql.Stmt) Article {
 	fileName := f.Name()
 	title := removeExtensionFrom(fileName)
 	uri := makeUri(articlePath, config.articleRoot)
+	// revisionsChannel := make(chan []Revision)
 
 	contents, _ := os.ReadFile(articlePath)
 	item := Article{
@@ -24,9 +61,23 @@ func processArticle(articlePath string, config BockConfig, f os.FileInfo) Articl
 		Source:       string(contents),
 		Html:         "",
 		Hierarchy:    makeHierarchy(articlePath, config.articleRoot),
+		Revisions:    nil,
 	}
+
+	// Insert into Database
+	_, se := stmt.Exec(makeID(articlePath), string(contents), f.ModTime().UTC(), title, uri)
+	if se != nil {
+		log.Fatal("SHIT ", se)
+	}
+
+	// Render the article HTML
 	html, raw := renderArticle(contents, item, "article", config)
 	item.Html = html
+
+	// fmt.Println(f.Name())
+	// go getCommits(repository, articlePath, config, revisionsChannel)
+	// revisions := <-revisionsChannel
+	// item.Revisions = revisions
 
 	os.MkdirAll(config.outputFolder+uri+"/raw", os.ModePerm)
 	os.WriteFile(config.outputFolder+uri+"/index.html", []byte(html), os.ModePerm)
@@ -154,15 +205,27 @@ func processFolder(path string, config BockConfig) ([]FolderThing, []FolderThing
 	return folders, articles
 }
 
-func process(config BockConfig) ([]Article, error) {
+func process(config BockConfig, repository *git.Repository, db *sql.DB) ([]Article, error) {
 	files := []Article{}
+	tx, _ := db.Begin()
+	stmt, _ := tx.Prepare(`
+  INSERT INTO articles (
+      id,
+      content,
+      modified,
+      title,
+      uri
+    )
+    VALUES (?, ?, ?, ?, ?)
+  `)
 
+	defer stmt.Close()
 	err := filepath.Walk(config.articleRoot, func(path string, f os.FileInfo, err error) error {
 		if !IGNORED_FOLDERS_REGEX.MatchString(path) {
 
 			if !IGNORED_FILES_REGEX.MatchString(path) {
 				if filepath.Ext(path) == ".md" {
-					item := processArticle(path, config, f)
+					item := processArticle(path, config, f, repository, stmt)
 					files = append(files, item)
 				}
 			}
@@ -177,6 +240,8 @@ func process(config BockConfig) ([]Article, error) {
 
 		return nil
 	})
+
+	tx.Commit()
 
 	return files, err
 }

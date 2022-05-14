@@ -6,6 +6,7 @@ require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/flosch/pongo2/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.4.2
+	github.com/mattn/go-sqlite3 v1.14.13
 	github.com/otiai10/copy v1.7.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/shirou/gopsutil/v3 v3.22.4
