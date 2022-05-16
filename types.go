@@ -55,6 +55,7 @@ type Statistics struct {
 type BockConfig struct {
 	articleRoot  string
 	outputFolder string
+	makeJSON     bool
 	statistics   Statistics
 }
 

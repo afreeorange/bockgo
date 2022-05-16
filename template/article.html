@@ -7,5 +7,5 @@
 {% endblock main %}
 
 {% block statistics %}
-  There are {{ statistics.ArticleCount }} articles in this wiki. On {{ statistics.BuildDate | date:"Monday, 2 Jan 2006 at 15:04 MST" }}, it took {{ statistics.GenerationTime }} to generate it on a {{ statistics.Platform }}/{{ statistics.Architecture }} {{ statistics.CPUCount }}-core system with {{ statistics.MemoryInGB }}GiB RAM
+  There are {{ statistics.ArticleCount }} articles in this wiki. On {{ statistics.BuildDate | date:"Monday, 2 Jan 2006 at 15:04 MST" }}, it took {{ statistics.GenerationTime }} to generate it on a {{ statistics.CPUCount }}-core {{ statistics.Platform }}/{{ statistics.Architecture }} system with {{ statistics.MemoryInGB }}GiB RAM
 {% endblock statistics %}

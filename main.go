@@ -1,11 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	_ "embed"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"strings"
@@ -24,10 +22,12 @@ func main() {
 	var versionInfo bool
 	var articleRoot string
 	var outputFolder string
+	var makeJSON bool
 
 	flag.BoolVar(&versionInfo, "v", false, "Version info")
 	flag.StringVar(&articleRoot, "a", "", "Article root")
 	flag.StringVar(&outputFolder, "o", "", "Output folder")
+	flag.BoolVar(&makeJSON, "j", true, "Create JSON source files")
 
 	flag.Parse()
 
@@ -69,62 +69,17 @@ func main() {
 		Platform:       runtime.GOOS,
 	}
 
+	// App config
 	config := BockConfig{
 		articleRoot:  articleRoot,
 		outputFolder: outputFolder,
 		statistics:   statistics,
+		makeJSON:     makeJSON,
 	}
 
-	// Set up the database
-	dbPath := config.outputFolder + "/articles.db"
-	os.Remove(dbPath)
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Database setup
+	db := makeDatabase(config)
 	defer db.Close()
-
-	sqlStmt := `
-	CREATE TABLE IF NOT EXISTS articles (
-    id              TEXT NOT NULL UNIQUE,
-    content         TEXT,
-    modified        TEXT NOT NULL,
-    title           TEXT NOT NULL,
-    uri             TEXT NOT NULL
-  );
-  CREATE VIRTUAL TABLE articles_fts USING fts5(
-    id,
-    content,
-    modified,
-    title,
-    uri,
-    content="articles"
-  );
-  CREATE TRIGGER fts_update AFTER INSERT ON articles
-    BEGIN
-      INSERT INTO articles_fts (
-        id,
-        content,
-        modified,
-        title,
-        uri
-      )
-      VALUES (
-        new.id,
-        new.content,
-        new.modified,
-        new.title,
-        new.uri
-      );
-  END;
-	`
-	_, err = db.Exec(sqlStmt)
-	if err != nil {
-		log.Printf("%q: %s\n", err, sqlStmt)
-		return
-	}
-
-	// --- End Database Setup ---
 
 	articles, err := process(config, repository, db)
 	if err != nil {

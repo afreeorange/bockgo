@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/afreeorange/bockgo/tree/master.svg?style=svg)](https://circleci.com/gh/afreeorange/bockgo/tree/master)
+
 ## Development Notes
 
 ```bash

@@ -2,48 +2,16 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 )
-
-func getCommits(repository *git.Repository, fileName string, config BockConfig, revisionsChannel chan []Revision) []Revision {
-	o, err := exec.Command(
-		"git",
-		"-C",
-		config.articleRoot,
-		"log",
-		`--pretty=format:'{"id": "%H", "shortId": "%h", "subject": "%f", "body": "%b", "date": "%aD"}'`,
-		fileName,
-	).Output()
-
-	res := []Revision{}
-
-	if err != nil {
-		fmt.Println("Error getting commits:", err)
-		return res
-	} else {
-		s := string(o)
-		s = strings.ReplaceAll(s, "'\n'", ",")
-		s = strings.ReplaceAll(s, "'", "")
-		s = strings.ReplaceAll(s, "\n", "")
-		s = "[" + s + "]"
-
-		json.Unmarshal([]byte(s), &res)
-	}
-
-	revisionsChannel <- res
-
-	return res
-}
 
 func processArticle(articlePath string, config BockConfig, f os.FileInfo, repository *git.Repository, stmt *sql.Stmt) Article {
 	fileName := f.Name()

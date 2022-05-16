@@ -17,6 +17,8 @@ var IGNORED_FOLDERS_REGEX = regexp.MustCompile("node_modules|.git|.circleci|_ass
 
 var IGNORED_FILES_REGEX = regexp.MustCompile("Home.md")
 
+var DATABASE_NAME = "articles.db"
+
 var markdown = goldmark.New(
 	goldmark.WithRendererOptions(
 		html.WithXHTML(),
