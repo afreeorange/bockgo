@@ -393,7 +393,7 @@ footer li a::before {
 
 .container.archive main ul li {
   border-top: 1px dotted var(--color-grey-light);
-  padding: 0.5em 0;
+  padding: 0.25em 0;
 }
 .container.archive main ul li {
   color: var(--color-grey-light);
