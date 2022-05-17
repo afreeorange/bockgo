@@ -12,11 +12,11 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
+var VERSION = "0.0.9"
+
 // TODO: Ignore dotfolders
 var IGNORED_FOLDERS_REGEX = regexp.MustCompile("node_modules|.git|.circleci|_assets|js|css|img")
-
 var IGNORED_FILES_REGEX = regexp.MustCompile("Home.md")
-
 var DATABASE_NAME = "articles.db"
 
 var markdown = goldmark.New(
@@ -41,6 +41,5 @@ var markdown = goldmark.New(
 
 //go:embed template
 var templatesContent embed.FS
-
 var pongoLoader = pongo2.NewFSLoader(templatesContent)
 var templateSet = pongo2.NewSet("template", pongoLoader)

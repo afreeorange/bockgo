@@ -32,7 +32,7 @@ func renderArticle(
 		"html":        conversionBuffer.String(),
 		"hierarchy":   context.Hierarchy,
 
-		"version":    version,
+		"version":    VERSION,
 		"statistics": config.statistics,
 	}
 
@@ -66,7 +66,7 @@ func renderArchive(articles []Article) string {
 		"articles": articles,
 
 		"type":    "archive",
-		"version": version,
+		"version": VERSION,
 	})
 
 	return o
@@ -82,7 +82,7 @@ func renderFolder(context Folder) string {
 		"uri":       context.URI,
 
 		"type":    "folder",
-		"version": version,
+		"version": VERSION,
 	})
 
 	return o

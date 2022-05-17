@@ -14,9 +14,9 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-//go:embed VERSION
-var b []byte
-var version = string(b)
+// //go:embed VERSION
+// var b []byte
+// var version = string(b)
 
 func main() {
 	var versionInfo bool
@@ -32,7 +32,7 @@ func main() {
 	flag.Parse()
 
 	if versionInfo {
-		fmt.Print(version)
+		fmt.Print(VERSION)
 		os.Exit(0)
 	}
 
