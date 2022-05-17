@@ -9,7 +9,11 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-func getCommits(repository *git.Repository, fileName string, config BockConfig, revisionsChannel chan []Revision) []Revision {
+func getCommits(
+	repository *git.Repository,
+	fileName string,
+	config BockConfig,
+) []Revision {
 	o, err := exec.Command(
 		"git",
 		"-C",
@@ -33,8 +37,6 @@ func getCommits(repository *git.Repository, fileName string, config BockConfig, 
 
 		json.Unmarshal([]byte(s), &res)
 	}
-
-	revisionsChannel <- res
 
 	return res
 }

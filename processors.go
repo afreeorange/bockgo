@@ -13,7 +13,13 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-func processArticle(articlePath string, config BockConfig, f os.FileInfo, repository *git.Repository, stmt *sql.Stmt) Article {
+func processArticle(
+	articlePath string,
+	config BockConfig,
+	f os.FileInfo,
+	repository *git.Repository,
+	stmt *sql.Stmt,
+) Article {
 	fileName := f.Name()
 	title := removeExtensionFrom(fileName)
 	uri := makeUri(articlePath, config.articleRoot)
