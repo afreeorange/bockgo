@@ -23,6 +23,16 @@ go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
 * [ ] Fix builds on cimg/go:1.18
 * [ ] [Markdown highlight in Raw view](https://www.zupzup.org/go-markdown-syntax-highlight-chroma/)
 
+### Versioning
+
+Did this before I specified the version in `constants.go`. It has its advantages.
+
+```golang
+//go:embed VERSION
+var b []byte
+var version = string(b)
+```
+
 ---
 
 ```bash

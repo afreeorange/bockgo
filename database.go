@@ -43,6 +43,7 @@ CREATE TRIGGER fts_update AFTER INSERT ON articles
 END;
 `
 
+// Set up the database and schema. Assumed that the output folder exists.
 func makeDatabase(config BockConfig) *sql.DB {
 	dbPath := config.outputFolder + "/" + DATABASE_NAME
 

@@ -14,10 +14,6 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-// //go:embed VERSION
-// var b []byte
-// var version = string(b)
-
 func main() {
 	var versionInfo bool
 	var articleRoot string
@@ -38,19 +34,19 @@ func main() {
 
 	if articleRoot == "" {
 		fmt.Println("You must give me an article root.")
-		os.Exit(1)
+		os.Exit(EXIT_NO_ARTICLE_ROOT)
 	}
 
 	if outputFolder == "" {
 		fmt.Println("You must give me an output folder.")
-		os.Exit(2)
+		os.Exit(EXIT_NO_OUTPUT_FOLDER)
 	}
 
 	repository, err := git.PlainOpen(articleRoot)
 
 	if err != nil {
 		fmt.Println("That article root does not appear to be a git repository.")
-		os.Exit(3)
+		os.Exit(EXIT_NOT_A_GIT_REPO)
 	}
 
 	// Some bookkeeping
@@ -76,6 +72,9 @@ func main() {
 		statistics:   statistics,
 		makeJSON:     makeJSON,
 	}
+
+	// Create the output folder first
+	os.MkdirAll(outputFolder, os.ModePerm)
 
 	// Database setup
 	db := makeDatabase(config)

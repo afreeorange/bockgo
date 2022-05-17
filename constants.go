@@ -43,3 +43,8 @@ var markdown = goldmark.New(
 var templatesContent embed.FS
 var pongoLoader = pongo2.NewFSLoader(templatesContent)
 var templateSet = pongo2.NewSet("template", pongoLoader)
+
+// Exit codes
+var EXIT_NO_ARTICLE_ROOT = 1
+var EXIT_NO_OUTPUT_FOLDER = 2
+var EXIT_NOT_A_GIT_REPO = 3

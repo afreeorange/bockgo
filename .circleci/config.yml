@@ -18,7 +18,7 @@ jobs:
           command: go mod download
       - run:
           name: Compile
-          command: CGO_ENABLED=1 go build -o --tags "fts5" "dist/bock-linux" .
+          command: CGO_ENABLED=1 go build --tags "fts5" -o "dist/bock-linux" .
       - aws-s3/sync:
           aws-region: AWS_DEFAULT_REGION
           aws-access-key-id: AWS_ACCESS_KEY_ID
