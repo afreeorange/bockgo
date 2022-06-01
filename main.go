@@ -55,23 +55,22 @@ func main() {
 
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
-	statistics := Statistics{
-		Architecture:   runtime.GOARCH,
-		ArticleCount:   0,
-		BuildDate:      time.Now().UTC(),
-		CPUCount:       runtime.NumCPU(),
-		GenerationTime: 0,
-		MemoryInGB:     int(v.Total / (1024 * 1024 * 1024)),
-		Platform:       runtime.GOOS,
-	}
 
 	// App config
 	config := BockConfig{
 		articleRoot:  articleRoot,
 		outputFolder: outputFolder,
-		statistics:   statistics,
-		makeJSON:     makeJSON,
-		started:      time.Now(),
+		meta: Meta{
+			Architecture:   runtime.GOARCH,
+			ArticleCount:   0,
+			BuildDate:      time.Now().UTC(),
+			CPUCount:       runtime.NumCPU(),
+			GenerationTime: 0,
+			MemoryInGB:     int(v.Total / (1024 * 1024 * 1024)),
+			Platform:       runtime.GOOS,
+		},
+		makeJSON: makeJSON,
+		started:  time.Now(),
 	}
 
 	// Create the output folder first
@@ -100,7 +99,7 @@ func main() {
 	)
 
 	// Generate the home page once all the statistics are gathered
-	config.statistics.GenerationTime = elapsed
-	config.statistics.ArticleCount = len(articles)
+	config.meta.GenerationTime = elapsed
+	config.meta.ArticleCount = len(articles)
 	processHome(config)
 }

@@ -23,7 +23,7 @@ type Revision struct {
 
 type Article struct {
 	FileModified time.Time   `json:"modified"`
-	FileCreated  time.Time   `json:"modified"`
+	FileCreated  time.Time   `json:"created"`
 	Hierarchy    []Hierarchy `json:"hierarchy"`
 	Html         string      `json:"html"`
 	ID           string      `json:"id"`
@@ -48,7 +48,7 @@ type Folder struct {
 	URI       string      `json:"uri"`
 }
 
-type Statistics struct {
+type Meta struct {
 	Architecture   string        `json:"architecture"`
 	ArticleCount   int           `json:"articleCount"`
 	BuildDate      time.Time     `json:"buildTime"`
@@ -62,7 +62,7 @@ type BockConfig struct {
 	articleRoot  string
 	outputFolder string
 	makeJSON     bool
-	statistics   Statistics
+	meta         Meta
 	started      time.Time
 }
 

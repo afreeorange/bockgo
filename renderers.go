@@ -33,8 +33,8 @@ func renderArticle(
 		"html":        conversionBuffer.String(),
 		"hierarchy":   context.Hierarchy,
 
-		"version":    VERSION,
-		"statistics": config.statistics,
+		"version": VERSION,
+		"meta":    config.meta,
 	}
 
 	baseContext.Update(pongo2.Context{
