@@ -8,6 +8,11 @@ type Hierarchy struct {
 	URI  string `json:"uri"`
 }
 
+type Revised struct {
+	Modified time.Time `json:"modified"`
+	Created  time.Time `json:"created"`
+}
+
 type Revision struct {
 	Id      string `json:"id"`
 	ShortId string `json:"shortId"`
@@ -18,6 +23,7 @@ type Revision struct {
 
 type Article struct {
 	FileModified time.Time   `json:"modified"`
+	FileCreated  time.Time   `json:"modified"`
 	Hierarchy    []Hierarchy `json:"hierarchy"`
 	Html         string      `json:"html"`
 	ID           string      `json:"id"`
@@ -57,6 +63,7 @@ type BockConfig struct {
 	outputFolder string
 	makeJSON     bool
 	statistics   Statistics
+	started      time.Time
 }
 
 type FolderThing struct {

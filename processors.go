@@ -6,12 +6,53 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 )
+
+var layout = "2006-01-02 15:04:05 -0700"
+
+// TODO: This is ugly af. And slow af. It should also return errors.
+// Using channels did nothing...
+func getModifiedDate(articlePath string, config BockConfig, c chan Revised) {
+	defer close(c)
+
+	o, err := exec.Command(
+		"git",
+		"-C",
+		config.articleRoot,
+		"log",
+		"--follow",
+		"--format=%ad",
+		"--date",
+		"iso8601",
+		articlePath,
+	).Output()
+
+	if err != nil {
+		fmt.Println("Error with " + articlePath + ": " + err.Error())
+	}
+
+	timeStrings := strings.Split(strings.TrimSuffix(string(o), "\n"), "\n")
+	modified, _ := time.Parse(layout, timeStrings[0])
+	created, _ := time.Parse(layout, timeStrings[len(timeStrings)-1])
+
+	r := new(Revised)
+
+	if len(timeStrings) == 0 {
+		r.Created = config.started
+		r.Modified = config.started
+	} else {
+		r.Created = created
+		r.Modified = modified
+	}
+
+	c <- *r
+}
 
 func processArticle(
 	articlePath string,
@@ -23,6 +64,18 @@ func processArticle(
 	fileName := f.Name()
 	title := removeExtensionFrom(fileName)
 	uri := makeUri(articlePath, config.articleRoot)
+
+	c := make(chan Revised)
+	go getModifiedDate(articlePath, config, c)
+
+	var created time.Time
+	var modified time.Time
+
+	for r := range c {
+		created = r.Created
+		modified = r.Modified
+	}
+
 	// revisionsChannel := make(chan []Revision)
 
 	contents, _ := os.ReadFile(articlePath)
@@ -31,7 +84,8 @@ func processArticle(
 		URI:          uri,
 		Title:        title,
 		Size:         f.Size(),
-		FileModified: f.ModTime().UTC(),
+		FileModified: modified,
+		FileCreated:  created,
 		Source:       string(contents),
 		Html:         "",
 		Hierarchy:    makeHierarchy(articlePath, config.articleRoot),
@@ -67,7 +121,6 @@ func processHome(config BockConfig) {
 	homePath := config.articleRoot + "/Home.md"
 	var contents []byte
 	var size int64
-	var mTime time.Time
 
 	f, err := os.Stat(homePath)
 
@@ -75,21 +128,31 @@ func processHome(config BockConfig) {
 		fmt.Println("Could not find Home.md... making one.")
 
 		contents = []byte("(You need to make a `Home.md` here!)")
-		mTime = time.Now().UTC()
 		size = 0
 	} else {
 		g, _ := os.ReadFile(config.articleRoot + "/Home.md")
 
 		contents = g
-		mTime = f.ModTime().UTC()
 		size = f.Size()
+	}
+
+	c := make(chan Revised)
+	go getModifiedDate(config.articleRoot+"/Home.md", config, c)
+
+	var created time.Time
+	var modified time.Time
+
+	for r := range c {
+		created = r.Created
+		modified = r.Modified
 	}
 
 	item := Article{
 		ID:           makeID(config.articleRoot + "/Home.md"),
 		Title:        "Hello!",
 		Size:         size,
-		FileModified: mTime,
+		FileModified: modified,
+		FileCreated:  created,
 		Source:       string(contents),
 		Html:         "",
 		URI:          "",

@@ -52,7 +52,10 @@
           <li>{{ sizeInBytes }} bytes</li>
           {% endif %}
 
-          {% if modified %}
+          {% if created %}
+          <li>Created on {{ created | date:"Monday, 2 Jan 2006 at 15:04 MST" }}</li>
+          {% endif %}
+          {% if created %}
           <li>Modified on {{ modified | date:"Monday, 2 Jan 2006 at 15:04 MST" }}</li>
           {% endif %}
 

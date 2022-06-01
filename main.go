@@ -71,6 +71,7 @@ func main() {
 		outputFolder: outputFolder,
 		statistics:   statistics,
 		makeJSON:     makeJSON,
+		started:      time.Now(),
 	}
 
 	// Create the output folder first
@@ -98,6 +99,7 @@ func main() {
 		time.Duration.Round(elapsed, time.Millisecond),
 	)
 
+	// Generate the home page once all the statistics are gathered
 	config.statistics.GenerationTime = elapsed
 	config.statistics.ArticleCount = len(articles)
 	processHome(config)

@@ -27,6 +27,7 @@ func renderArticle(
 		"sizeInBytes": context.Size,
 		"title":       context.Title,
 		"modified":    context.FileModified,
+		"created":     context.FileCreated,
 		"source":      context.Source,
 		"uri":         context.URI,
 		"html":        conversionBuffer.String(),
