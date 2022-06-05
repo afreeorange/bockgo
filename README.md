@@ -86,6 +86,7 @@ commits.ForEach(func(c *object.Commit) error {
 * [Chroma/Pygment style reference](https://xyproto.github.io/splash/docs/all.html)
 * [Enabling FTS5 with `go-sqlite`](https://github.com/mattn/go-sqlite3/issues/340)
 * [Build Tags in Golang](https://www.digitalocean.com/community/tutorials/customizing-go-binaries-with-build-tags)
+* [Go Routines Under the Hood](https://osmh.dev/posts/goroutines-under-the-hood)
 
 ### Books
 
