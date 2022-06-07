@@ -12,15 +12,15 @@ go mod tidy
 # Remove a package
 go get package@none
 
-# Build. Version info is injected at build...
-go build -o ~/Downloads/bock -v -ldflags="-X main.version=1.0.0" .
+# Build
+CGO_ENABLED=1 go build --tags "fts5" -o "dist/bock-$(uname)-$(uname -m)" .
 ```
 
 ### TODO
 
 * [ ] Table of Contents
 * [x] Configurable Syntax Highlight
-* [ ] Fix builds on cimg/go:1.18
+* [x] Fix builds on cimg/go:1.18
 * [ ] [Markdown highlight in Raw view](https://www.zupzup.org/go-markdown-syntax-highlight-chroma/)
 
 ### Versioning
@@ -70,7 +70,9 @@ commits.ForEach(func(c *object.Commit) error {
 
 ## Libraries
 
-* https://github.com/vbauerster/mpb
+* A possible [progress bar](https://github.com/vbauerster/mpb).
+* Hugo uses [afero](https://github.com/spf13/afero) as its filesystem abstraction layer. I have not needed it. Yet.
+* [This is Commander](https://github.com/spf13/cobra) but for golang <3 Maybe not necessary here since the `flag` library in STDLIB has everything I need. But longopts are nice!
 
 ## References
 

@@ -42,16 +42,16 @@ func main() {
 		os.Exit(EXIT_NO_OUTPUT_FOLDER)
 	}
 
+	// Some bookkeeping
+	start := time.Now()
+	v, _ := mem.VirtualMemory()
+
 	repository, err := git.PlainOpen(articleRoot)
 
 	if err != nil {
 		fmt.Println("That article root does not appear to be a git repository.")
 		os.Exit(EXIT_NOT_A_GIT_REPO)
 	}
-
-	// Some bookkeeping
-	start := time.Now()
-	v, _ := mem.VirtualMemory()
 
 	articleRoot = strings.TrimRight(articleRoot, "/")
 	outputFolder = strings.TrimRight(outputFolder, "/")
