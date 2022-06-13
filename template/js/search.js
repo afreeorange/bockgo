@@ -24,7 +24,7 @@ const REMOTE_DATABASE = "/articles.db";
   const template = `
    {% for row in rows %}
    <li>
-     <a href="/{{ row.uri }}" title="{{ row.title }}">{{ row.highlightedTitle | arrowPath | markMatch | safe }}</a>
+     <a href="{{ row.uri }}" title="{{ row.title }}">{{ row.highlightedTitle | arrowPath | markMatch | safe }}</a>
      <br />
      <small>
        {{ row.content | markMatch | safe }}
