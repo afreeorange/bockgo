@@ -16,9 +16,11 @@
   <ul>
     {% for child in children.Folders %}
       <li>
-        <a href="{{ child.URI }}" title="{{ child.Name }}">
-          {{ child.Name }}
-        </a>
+        <strong>
+          <a href="{{ child.URI }}" title="{{ child.Name }}">
+            {{ child.Name }}
+          </a>
+      </strong>
       </li>
     {% endfor %}
   </ul>

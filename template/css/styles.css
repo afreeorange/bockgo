@@ -16,7 +16,7 @@
   --color-grey-superlight: #eee;
   --color-grey: #999;
   --color-highlight: #fb4934;
-  --color-highlight-light: #cc241d;
+  --color-highlight-dark: #cc241d;
 
   /* Other */
   --transition-duration: 0.25s;
@@ -103,7 +103,7 @@ a {
   text-decoration-color: var(--color-highlight);
 }
 a:hover {
-  color: var(--color-highlight-light);
+  color: var(--color-highlight-dark);
 }
 
 hr {
@@ -262,7 +262,7 @@ main nav ul li:not(:last-child) a::after {
 
 h1 > span,
 h2 > span {
-  background-color: var(--color-highlight-light);
+  background-color: var(--color-highlight-dark);
   border-radius: var(--border-radius);
   color: white;
   display: inline-flex;
@@ -361,7 +361,7 @@ footer li a::before {
   background-color: var(--color-highlight);
 }
 .container.raw main h1 span:nth-of-type(1):hover {
-  background-color: var(--color-highlight-light);
+  background-color: var(--color-highlight-dark);
 }
 
 .container.random main {
