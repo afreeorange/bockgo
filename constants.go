@@ -12,7 +12,7 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-var VERSION = "0.0.2-alpha"
+var VERSION = "0.0.3-alpha"
 
 // TODO: Ignore dotfolders
 var IGNORED_FOLDERS_REGEX = regexp.MustCompile("node_modules|.git|.circleci|_assets|js|css|img")
