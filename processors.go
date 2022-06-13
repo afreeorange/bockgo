@@ -14,8 +14,6 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-var layout = "2006-01-02 15:04:05 -0700"
-
 // TODO: This is ugly af. And slow af. It should also return errors.
 // Using channels did nothing...
 func getModifiedDate(articlePath string, config BockConfig, c chan Revised) {
@@ -38,8 +36,8 @@ func getModifiedDate(articlePath string, config BockConfig, c chan Revised) {
 	}
 
 	timeStrings := strings.Split(strings.TrimSuffix(string(o), "\n"), "\n")
-	modified, _ := time.Parse(layout, timeStrings[0])
-	created, _ := time.Parse(layout, timeStrings[len(timeStrings)-1])
+	modified, _ := time.Parse(DATE_LAYOUT, timeStrings[0])
+	created, _ := time.Parse(DATE_LAYOUT, timeStrings[len(timeStrings)-1])
 
 	r := new(Revised)
 
@@ -257,9 +255,9 @@ func process(config BockConfig, repository *git.Repository, db *sql.DB) ([]Artic
   `)
 
 	defer stmt.Close()
+
 	err := filepath.Walk(config.articleRoot, func(path string, f os.FileInfo, err error) error {
 		if !IGNORED_FOLDERS_REGEX.MatchString(path) {
-
 			if !IGNORED_FILES_REGEX.MatchString(path) {
 				if filepath.Ext(path) == ".md" {
 					item := processArticle(path, config, f, repository, stmt)
