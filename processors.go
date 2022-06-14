@@ -260,6 +260,7 @@ func process(config BockConfig, repository *git.Repository, db *sql.DB) ([]Artic
 		if !IGNORED_FOLDERS_REGEX.MatchString(path) {
 			if !IGNORED_FILES_REGEX.MatchString(path) {
 				if filepath.Ext(path) == ".md" {
+					fmt.Print(".")
 					item := processArticle(path, config, f, repository, stmt)
 					files = append(files, item)
 				}
@@ -276,6 +277,7 @@ func process(config BockConfig, repository *git.Repository, db *sql.DB) ([]Artic
 		return nil
 	})
 
+	fmt.Println("")
 	tx.Commit()
 
 	return files, err

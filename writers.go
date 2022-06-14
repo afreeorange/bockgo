@@ -40,7 +40,7 @@ func copyTemplateAssets(config BockConfig) {
 		}
 	}
 
-	fmt.Println("done.")
+	fmt.Println("done")
 }
 
 func copyAssets(config BockConfig) {
@@ -51,5 +51,5 @@ func copyAssets(config BockConfig) {
 		fmt.Print("Oops, could not copy assets: ", err)
 	}
 
-	fmt.Println("done.")
+	fmt.Println("done")
 }
