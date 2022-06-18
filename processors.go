@@ -256,6 +256,7 @@ func process(config BockConfig, repository *git.Repository, db *sql.DB) ([]Artic
 
 	defer stmt.Close()
 
+	fmt.Print("Processing articles")
 	err := filepath.Walk(config.articleRoot, func(path string, f os.FileInfo, err error) error {
 		if !IGNORED_FOLDERS_REGEX.MatchString(path) {
 			if !IGNORED_FILES_REGEX.MatchString(path) {

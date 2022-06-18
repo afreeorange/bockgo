@@ -74,6 +74,7 @@ func main() {
 	}
 
 	// Create the output folder first
+	fmt.Println("Making", outputFolder, "if it doesn't exist")
 	os.MkdirAll(outputFolder, os.ModePerm)
 
 	// Database setup

@@ -13,7 +13,7 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-var VERSION = "0.0.6-alpha"
+var VERSION = "0.0.7-alpha"
 var DATE_LAYOUT = "2006-01-02 15:04:05 -0700"
 var DATABASE_NAME = "articles.db"
 

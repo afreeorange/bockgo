@@ -89,6 +89,7 @@ commits.ForEach(func(c *object.Commit) error {
 * [Enabling FTS5 with `go-sqlite`](https://github.com/mattn/go-sqlite3/issues/340)
 * [Build Tags in Golang](https://www.digitalocean.com/community/tutorials/customizing-go-binaries-with-build-tags)
 * [Go Routines Under the Hood](https://osmh.dev/posts/goroutines-under-the-hood)
+* [A million files in `git` repo](https://canvatechblog.com/we-put-half-a-million-files-in-one-git-repository-heres-what-we-learned-ec734a764181).
 
 ### Books
 

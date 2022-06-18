@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 )
@@ -46,6 +47,8 @@ END;
 // Set up the database and schema. Assumed that the output folder exists.
 func makeDatabase(config BockConfig) *sql.DB {
 	dbPath := config.outputFolder + "/" + DATABASE_NAME
+
+	fmt.Println("Creating database", dbPath)
 
 	// Recreate the database from scratch. TODO: Do this intelligently.
 	os.Remove(dbPath)
