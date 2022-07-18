@@ -65,3 +65,4 @@ func makeDatabase(config BockConfig) *sql.DB {
 
 	return db
 }
+

@@ -73,6 +73,7 @@ commits.ForEach(func(c *object.Commit) error {
 * A possible [progress bar](https://github.com/vbauerster/mpb).
 * Hugo uses [afero](https://github.com/spf13/afero) as its filesystem abstraction layer. I have not needed it. Yet.
 * [This is Commander](https://github.com/spf13/cobra) but for golang <3 Maybe not necessary here since the `flag` library in STDLIB has everything I need. But longopts are nice!
+* [Cobra](https://cobra.dev/) is a full-featured CLI app framework
 
 ## References
 
@@ -94,4 +95,5 @@ commits.ForEach(func(c *object.Commit) error {
 ### Books
 
 * [Learning Go](https://miek.nl/go/learninggo.html)
+
 * [Lexical Scanning in Go](https://www.youtube.com/watch?v=HxaD_trXwRE)
